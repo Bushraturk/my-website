@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://my-website-git-main-bushraturk.vercel.app',
+  url: 'https://physical-ai-book-uj5v.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For static hosting like Vercel, root is appropriate
   baseUrl: '/',
