@@ -8,6 +8,8 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #1a2c42 0%, #2c3e50 100%);
+  color: white;
 }
 
 @media screen and (max-width: 996px) {
@@ -16,8 +18,192 @@
   }
 }
 
+.heroSubtitle {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  opacity: 0.9;
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+}
+
+.heroGraphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.robotIllustration {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.2));
+}
+
+.sectionTitle {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 2rem !important;
+  color: #2c3e50;
+}
+
+.courseOverview {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+.courseOverview p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.justifiedText {
+  text-align: justify;
+}
+
+.modulesSection {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+.moduleCard {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.moduleCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.moduleIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moduleTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.moduleWeeks {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+.moduleDescription {
+  font-size: 0.95rem;
+  color: #34495e;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.featuresSection {
+  padding: 4rem 0;
+  background-color: #f0f4f8;
+}
+
+.featureCard {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #2c3e50;
+}
+
+.featureDescription {
+  font-size: 0.95rem;
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.quickAccessSection {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+.resourceCard {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.resourceCard:hover {
+  transform: translateY(-3px);
+}
+
+.resourceIcon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.resourceTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #2c3e50;
+}
+
+.resourceDescription {
+  font-size: 0.9rem;
+  color: #34495e;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.pagination-nav {
+  margin-top: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  .heroBanner {
+    text-align: center;
+  }
+  
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .moduleCard {
+    margin-bottom: 1rem;
+  }
+  
+  .featureCard, .resourceCard {
+    margin-bottom: 1rem;
+  }
 }

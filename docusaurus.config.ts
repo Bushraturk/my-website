@@ -5,9 +5,9 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  title: 'Physical AI & Humanoid Robotics Textbook',
+  tagline: 'A comprehensive AI-native textbook for embodied intelligence and robotics',
+  favicon: 'img/robotics-logo.png', // Will need to add this image
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -15,17 +15,23 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://your-organization.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/physical-ai-textbook/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'your-organization', // Usually your GitHub org/user name.
+  projectName: 'physical-ai-textbook', // Usually your repo name.
 
   onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
+
+  // Markdown configuration to handle broken images
+  markdown: {
+    mermaid: true,
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -44,25 +50,21 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
+            'https://github.com/your-organization/physical-ai-textbook/edit/main/',
+          routeBasePath: '/', // Serve the docs at the root
         },
         theme: {
           customCss: './src/css/custom.css',
+        },
+        gtag: {
+          trackingID: 'G-XXXXXXXXXX',
+          anonymizeIP: true,
+        },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+          ignorePatterns: ['/tags/**'],
+          filename: 'sitemap.xml',
         },
       } satisfies Preset.Options,
     ],
@@ -70,26 +72,33 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/robotics-social-card.jpg', // Will need to add this image
     colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
       respectPrefersColorScheme: true,
     },
+    // Enable local search functionality
+    algolia: undefined, // Explicitly disable Algolia to use local search
     navbar: {
-      title: 'My Site',
+      title: 'Physical AI & Robotics',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Physical AI & Humanoid Robotics Textbook Logo',
         src: 'img/logo.svg',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'textbookSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Textbook',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          type: 'search',
+          position: 'right',
+        },
+        {
+          href: 'https://github.com/Bushraturk/Physical-AI-Book',
           label: 'GitHub',
           position: 'right',
         },
@@ -99,28 +108,40 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Modules',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'ROS 2',
+              to: '/docs/ros2/intro',
+            },
+            {
+              label: 'Gazebo/Unity',
+              to: '/docs/gazebo-unity/intro',
+            },
+            {
+              label: 'NVIDIA Isaac',
+              to: '/docs/nvidia-isaac/intro',
+            },
+            {
+              label: 'Vision-Language-Action',
+              to: '/docs/vla/intro',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Resources',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Hardware Setup',
+              to: '/docs/hardware-guides',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Lab Exercises',
+              to: '/docs/ros2/lab-exercises/lab1',
             },
             {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Assessments',
+              to: '/docs/ros2/assessments/quiz1',
             },
           ],
         },
@@ -128,23 +149,29 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'Instructor Guide',
+              to: '/docs/instructor-guide/intro',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/your-organization/physical-ai-textbook',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Course. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['python', 'bash', 'json', 'docker'],
     },
   } satisfies Preset.ThemeConfig,
+
+  // Custom fields for non-standard configuration options
+  customFields: {
+    onBrokenMarkdownImages: 'warn', // Handle broken image references gracefully
+  },
 };
 
 export default config;

@@ -1,20 +1,78 @@
 # Dependencies
-/node_modules
+node_modules/
 
-# Production
-/build
+# Docusaurus build directory
+.build/
+dist/
+out/
+
+# Docusaurus cache directory
+.docusaurus/
+.cache/
+
+# Temporary files
+*.tmp
+*.log
+.npm/
+.yarn/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env*
+!.env.example
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output/
+
+# TypeScript build
+*.tsbuildinfo
 
 # Generated files
-.docusaurus
-.cache-loader
+generated/
+api/
+docs/api/
 
-# Misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Build outputs
+build/
+public/
+
+# Next.js and Vercel specific
+.next/
+.vercel/
+
+# Testing
+junit.xml
+coverage/lcov-report/
+
+# IDE specific
+.vs/
+*.tmp
+*.bak

@@ -12,13 +12,20 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "validate:content": "node scripts/validate-links.js",
+    "generate:content": "node scripts/generate-content.js",
+    "download:content": "node scripts/download-content.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",
+    "@docusaurus/plugin-content-docs": "^3.9.2",
     "@docusaurus/preset-classic": "3.9.2",
+    "@docusaurus/theme-classic": "^3.9.2",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "dotenv": "^17.2.3",
+    "glob": "^13.0.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

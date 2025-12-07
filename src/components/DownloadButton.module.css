@@ -1,0 +1,48 @@
+.downloadContainer {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background-color: var(--ifm-color-emphasis-100);
+  text-align: center;
+}
+
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.downloadButton.unavailable {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.downloadIcon {
+  font-size: 1.2rem;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.infoText {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (min-width: 997px) {
+  .downloadContainer {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

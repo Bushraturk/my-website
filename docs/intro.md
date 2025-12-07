@@ -1,47 +1,59 @@
 ---
+title: Introduction to Physical AI & Humanoid Robotics
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction to Physical AI & Humanoid Robotics
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Welcome to the comprehensive textbook on Physical AI & Humanoid Robotics! This textbook is designed to take you through the journey of understanding how artificial intelligence meets the physical world through robotics.
 
-## Getting Started
+## Course Overview
 
-Get started by **creating a new site**.
+This 13-week course is structured around four core modules:
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+1. **ROS 2 (Weeks 1-3)**: Learn about the Robot Operating System, the nervous system of robotics
+2. **Gazebo/Unity (Weeks 4-6)**: Explore simulation environments that act as digital twins
+3. **NVIDIA Isaac (Weeks 7-9)**: Understand AI-robot brains, perception, and VSLAM
+4. **Vision-Language-Action (VLA) (Weeks 10-13)**: Integrate vision, language, and action planning
 
-### What you'll need
+## Learning Objectives
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+By the end of this course, you'll be able to:
 
-## Generate a new site
+- Design and implement robotic systems using modern AI techniques
+- Understand the integration between digital intelligence and physical bodies
+- Work with state-of-the-art simulation and hardware platforms
+- Apply vision-language-action models to robotic tasks
+- Plan and execute complex robotic missions
 
-Generate a new Docusaurus site using the **classic template**.
+## Prerequisites
 
-The classic template will automatically be added to your project after you run the command:
+- Basic understanding of programming concepts (preferably Python)
+- Fundamentals of linear algebra and calculus
+- Basic knowledge of physics (mechanics, kinematics)
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## Hardware Requirements
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+Some modules will require access to robotics hardware including:
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+- NVIDIA Jetson development kits
+- Intel RealSense depth cameras
+- RTX workstation for simulation
+- Compatible robotic platforms
 
-## Start your site
+:::caution
 
-Run the development server:
+Some modules require high-performance computing resources. Ensure you have access to compatible hardware before starting the corresponding weeks.
 
-```bash
-cd my-website
-npm run start
-```
+:::
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+## How to Use This Textbook
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+Each week includes:
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- Theoretical concepts with practical examples
+- Lab exercises to apply what you've learned
+- Assessments to evaluate your understanding
+- Hardware setup guides for hands-on implementation
+
+Navigate through the modules using the sidebar, or continue with [Week 1: ROS 2 Introduction](./ros2/intro.md).
