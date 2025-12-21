@@ -1,8 +1,3 @@
----
-title: Week 4-5 - Simulation Environments and Gazebo Integration
-sidebar_position: 6
----
-
 # Week 4-5: Simulation Environments and Gazebo Integration
 
 In these two weeks, we'll dive deep into Gazebo simulation, which is specifically designed for robotics applications. You'll learn to create realistic environments, spawn robots, and interface them with ROS 2 nodes for comprehensive testing.
@@ -55,12 +50,12 @@ Let's create a simple world file for our simulation:
       <uri>model://sun</uri>
     </include>
 
-    <!-- Add ground plane -->
+    <!-- <DOMTranslate>Add ground plane</DOMTranslate> -->
     <include>
       <uri>model://ground_plane</uri>
     </include>
 
-    <!-- Define a simple box obstacle -->
+    <!-- <DOMTranslate>Define a simple box obstacle</DOMTranslate> -->
     <model name="box_obstacle">
       <pose>2 0 0.5 0 0 0</pose>
       <link name="link">

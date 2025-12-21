@@ -1,0 +1,46 @@
+{
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "سائڈ بار کو گستاخ کریں",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "سائڈ بار کو گستاخ کریں",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "دستاویزات نیویگیشن",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "پچھلا",
+    "description": "The label used for the previous pagination button in docs"
+  },
+  "theme.docs.paginator.next": {
+    "message": "اگلا",
+    "description": "The label used for the next pagination button in docs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "سائڈ بار کو سکیڑیں",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "سائڈ بار کو سکیڑیں",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "یہ {siteTitle} کے ایک مستقبل کے ورژن کا {versionLabel} ہے۔",
+    "description": "The label used for the unreleased version suggestion"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "یہ {siteTitle} کا {versionLabel} ہے جو اب زیادہ تر تازہ کاری نہیں کیا جاتا ہے۔",
+    "description": "The label used for the unmaintained version suggestion"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "تازہ ترین دستاویزات کے لیے {latestVersionLink} ({versionLabel}) دیکھیں۔",
+    "description": "The label used for the version suggestion"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "تازہ ترین",
+    "description": "The label used for the latest version link"
+  }
+}

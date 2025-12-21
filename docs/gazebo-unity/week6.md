@@ -1,8 +1,3 @@
----
-title: Week 6 - Unity Integration and Advanced Sensors
-sidebar_position: 7
----
-
 # Week 6: Unity Integration and Advanced Sensors
 
 In this week, we'll explore Unity as a simulation platform for robotics and learn about advanced sensor simulation techniques. Unity provides high-fidelity rendering and a rich ecosystem of tools that complement the physics-accurate simulation offered by Gazebo.
@@ -70,244 +65,249 @@ public class RobotController : MonoBehaviour
         // Apply received velocity to the robot
         transform.Translate(new Vector3(velocity.linear.x, 0, velocity.linear.z) * Time.deltaTime);
     }
-
-    void OnApplicationQuit()
-    {
-        rosSocket.Close();
-    }
 }
 ```
 
 ## Advanced Sensor Simulation in Unity
 
-### Camera Sensors
+### Camera Sensor Simulation
 
-The Unity Perception package provides realistic camera simulation with several parameters:
+Unity's rendering engine allows for advanced camera simulation with:
 
-```csharp
-using Unity.Robotics.Perception;
-using Unity.Robotics.Perception.GroundTruth;
-
-public class CameraSensorSetup : MonoBehaviour
-{
-    [SerializeField] private Sensor sensor;
-
-    void Start()
-    {
-        var cameraSensor = sensor.GetComponent<CameraSensor>();
-
-        // Configure camera properties
-        cameraSensor.Camera.fieldOfView = 60f;  // Field of view in degrees
-        cameraSensor.Camera.nearClipPlane = 0.1f;
-        cameraSensor.Camera.farClipPlane = 100f;
-
-        // Enable depth rendering for depth camera
-        cameraSensor.EnableSegmentation = true;
-        cameraSensor.EnableOpticalFlow = true;
-    }
-}
-```
+- **Physical Camera Properties**: Matching real-world camera specifications like focal length, aperture, etc.
+- **Lens Distortion**: Simulation of lens distortion effects
+- **Lighting Effects**: Realistic response to varying lighting conditions
+- **Synthetic Data Generation**: Creation of labeled datasets for perception training
 
 ### LiDAR Simulation
 
-Unity provides plugins for simulating LiDAR sensors with realistic noise models:
+Unity Perception provides LiDAR simulation capabilities:
 
-```csharp
-using Unity.Robotics.Perception.LiDAR;
-
-public class LiDARSensorSetup : MonoBehaviour
-{
-    [SerializeField] private LiDARManager liDARManager;
-
-    void Start()
-    {
-        // Configure LiDAR properties
-        liDARManager.Range = 20.0f;  // Max detection range in meters
-        liDARManager.AngleResolution = 0.25f;  // Angular resolution in degrees
-        liDARManager.VerticalAngleResolution = 0.5f;
-        liDARManager.VerticalAngleRange = new Vector2(-15.0f, 15.0f);
-
-        // Add noise model
-        liDARManager.NoiseModel = new GaussianNoiseModel(0.01f, 0.001f);
-    }
-}
-```
-
-### Advanced Unity Perception Features
-
-Here's an example of how to generate synthetic training data for computer vision models:
-
-```csharp
-using Unity.Robotics.Perception;
-using Unity.Robotics.Perception.GroundTruth;
-using UnityEngine;
-
-public class SyntheticDataGenerator : MonoBehaviour
-{
-    [Header("Capture Settings")]
-    [Range(0.1f, 5f)] public float captureInterval = 1f;
-    public string outputDirectory = "SyntheticData";
-    public bool captureRGB = true;
-    public bool captureDepth = true;
-    public bool captureSegmentation = true;
-    public bool captureBoundingBoxes = true;
-
-    private float lastCaptureTime;
-
-    void Start()
-    {
-        lastCaptureTime = Time.time;
-
-        // Configure the Perception Manager
-        PerceptionManager.Instance.outputDirectory = outputDirectory;
-        PerceptionManager.Instance.annotationCaptureRgb = captureRGB;
-        PerceptionManager.Instance.annotationCaptureDepth = captureDepth;
-        PerceptionManager.Instance.annotationCaptureSegmentation = captureSegmentation;
-        PerceptionManager.Instance.annotationCaptureBoundingBox2D = captureBoundingBoxes;
-    }
-
-    void Update()
-    {
-        if (Time.time - lastCaptureTime >= captureInterval)
-        {
-            // Add environmental variations
-            AddEnvironmentalVariations();
-
-            // Capture a sample with annotations
-            PerceptionManager.Instance.CaptureSample();
-
-            lastCaptureTime = Time.time;
-        }
-    }
-
-    void AddEnvironmentalVariations()
-    {
-        // Randomize lighting
-        var lights = FindObjectsOfType<Light>();
-        foreach (var light in lights)
-        {
-            // Add random variations to light properties
-            light.intensity = Mathf.Clamp(light.intensity + Random.Range(-0.1f, 0.1f), 0.5f, 1.5f);
-        }
-
-        // Apply random material changes
-        var renderers = FindObjectsOfType<Renderer>();
-        foreach (var renderer in renderers)
-        {
-            if (renderer.material.HasProperty("_Color"))
-            {
-                var originalColor = renderer.material.color;
-                var variation = new Color(
-                    Mathf.Clamp01(originalColor.r + Random.Range(-0.05f, 0.05f)),
-                    Mathf.Clamp01(originalColor.g + Random.Range(-0.05f, 0.05f)),
-                    Mathf.Clamp01(originalColor.b + Random.Range(-0.05f, 0.05f)),
-                    originalColor.a
-                );
-                renderer.material.color = variation;
-            }
-        }
-    }
-}
-```
-
-## Unity vs Gazebo Comparison
-
-| Feature | Gazebo | Unity |
-|--------|---------|-------|
-| Physics Accuracy | High | Medium-High |
-| Visual Fidelity | Medium | High |
-| Sensor Simulation | Excellent | Excellent |
-| Development Speed | Fast | Medium |
-| Rendering Quality | Basic | Photorealistic |
-| Ecosystem | Robotics-focused | General-purpose |
-
-## Creating Photo-Realistic Environments
-
-Unity excels in creating visually realistic environments for perception tasks:
-
-### Environment Design Principles
-
-1. **Scene Complexity**: Balance visual quality with simulation performance
-2. **Lighting**: Use realistic lighting to match target environments
-3. **Materials**: Use physically-based materials for accurate rendering
-4. **Assets**: Use high-quality models that match real-world objects
-5. **Weather**: Include weather variations for comprehensive testing
-
-### Sample Environment Setup
+- **Raycasting**: Physically accurate ray casting to simulate LiDAR measurements
+- **Noise Simulation**: Addition of realistic noise patterns to sensor data
+- **Dynamic Obstacles**: Real-time response to moving objects in the scene
+- **Multiple Return Simulations**: Modeling of multi-return LiDAR sensors
 
 ```csharp
 using UnityEngine;
+using Unity.Perception.GroundTruth;
 
-public class EnvironmentSetup : MonoBehaviour
+public class LidarSimulator : MonoBehaviour
 {
-    public Light sunLight;
-    public GameObject[] environmentObjects;
-    
-    [System.Serializable]
-    public class WeatherSettings
-    {
-        public float fogDensity = 0.0f;
-        public Color skyColor = Color.blue;
-        public float windSpeed = 0.0f;
-    }
-    
-    public WeatherSettings currentWeather;
-    
+    [Range(10, 360)]
+    public int verticalResolution = 64;
+    [Range(10, 2000)]
+    public int horizontalResolution = 1000;
+    [Range(10f, 300f)]
+    public float range = 100f;
+
     void Start()
     {
-        // Configure environmental settings
-        RenderSettings.fog = true;
-        RenderSettings.fogDensity = currentWeather.fogDensity;
-        RenderSettings.ambientSkyColor = currentWeather.skyColor;
-        
-        // Add wind zones for outdoor simulation
-        foreach (var obj in environmentObjects)
-        {
-            if (obj.CompareTag("WindZone"))
-            {
-                var windZone = obj.GetComponent<WindZone>();
-                windZone.windMain = currentWeather.windSpeed;
-            }
-        }
+        var lidarSensor = GetComponent<LidarSensor>();
+        lidarSensor.SetParameter(LidarParameters.VerticalResolution, verticalResolution);
+        lidarSensor.SetParameter(LidarParameters.HorizontalResolution, horizontalResolution);
+        lidarSensor.SetParameter(LidarParameters.Range, range);
     }
 }
 ```
 
-## Cross-Platform Validation
+## Unity vs Gazebo: When to Use Each Platform
 
-Validating simulation results across platforms ensures robustness:
+### Choose Unity When:
 
-1. **Consistent Metrics**: Use the same evaluation metrics in both Gazebo and Unity
-2. **Shared Scenarios**: Create similar test scenarios in both environments
-3. **Parameter Mapping**: Ensure physical parameters are consistent
-4. **Data Comparison**: Analyze performance differences between platforms
+- Perception tasks require photorealistic rendering
+- Generating training data for computer vision models
+- Developing augmented or mixed reality interfaces
+- Need sophisticated visual environments
+- Creating training simulations for human operators
 
-## Practical Applications in Industry
+### Choose Gazebo When:
 
-Unity simulation is used in:
+- Accurate physics simulation is critical
+- Testing robot dynamics and control algorithms
+- Working with standard ROS/ROS 2 robot models
+- Need realistic sensor simulation (LiDAR, IMU, cameras)
+- Validating control algorithms prior to real-world deployment
 
-- Autonomous vehicle perception training
-- Industrial robot path planning
-- Augmented reality applications
-- Training AI models with synthetic data
-- Human-robot interaction studies
+## Photo-Realistic Environment Design
 
-## Lab Exercise Preview
+### Creating Realistic Lighting
 
-In the next section, you'll find the detailed instructions for the advanced Gazebo/Unity lab, where you'll implement a complete perception pipeline using both simulation platforms.
+Unity's lighting system allows for realistic environment rendering:
 
-## Summary
+- **Directional Lights**: Simulating sunlight at different times of day
+- **Reflection Probes**: Capturing environmental reflections for realistic surfaces
+- **Light Probes**: Interpolating lighting information for moving objects
+- **Real-time Global Illumination**: Simulating light bouncing between surfaces
 
-In this week, you've learned:
+### Material Design for Robotics Simulation
 
-- How to set up Unity for robotics simulation
-- How to implement advanced sensor models in Unity
-- How to design photo-realistic environments for perception tasks
-- How to compare simulation results across platforms
-- The applications of Unity in robotics
+Creating realistic materials for robotics applications:
+
+- **Physically-Based Materials**: Using Unity's Standard Shader for accurate material responses
+- **Surface Detail**: Adding micro-details like scratches, dust, and wear patterns
+- **Texture Mapping**: Using high-resolution textures for realistic surface appearance
+- **Normal Maps**: Simulating surface details without increasing geometry complexity
+
+### Synthetic Data Generation
+
+Unity's Perception Package enables synthetic data generation:
+
+- **Semantic Segmentation**: Automatic labeling of all objects in the scene
+- **Instance Segmentation**: Individual labeling of each object instance
+- **Depth Information**: Accurate depth measurement for every pixel
+- **Bounding Boxes**: Automatic 2D and 3D bounding box annotation
+- **Optical Flow**: Pixel-level motion tracking between frames
+
+Sample configuration for synthetic data generation:
+
+```json
+{
+  "cameras": [
+    {
+      "name": "MainCamera",
+      "captureRgb": true,
+      "captureDepth": true,
+      "captureSegmentation": true,
+      "captureOpticalFlow": true,
+      "captureBoundingBox2D": true,
+      "captureBoundingBox3D": true,
+      "recording": {
+        "outputDir": "/path/to/output",
+        "framerate": 30,
+        "frameskip": 0
+      }
+    }
+  ]
+}
+```
+
+## Perception Algorithm Validation
+
+### Pre-training Validation
+
+Before training perception algorithms on real data:
+
+- Test algorithms in synthetic environments with ground truth
+- Validate detection and tracking algorithms with known test cases
+- Establish baseline performance metrics
+- Identify potential failure modes in simulation
+
+### Sim-to-Real Transfer
+
+Transferring algorithms from simulation to real-world robotics:
+
+- Domain randomization to increase algorithm robustness
+- Synthetic-to-real adaptation techniques
+- Validation of physics models against real robot behavior
+- Sensor characteristic matching between simulation and reality
+
+## Integration with ROS/ROS 2
+
+Unity supports ROS/ROS 2 integration through several tools:
+
+### ROS# (ROS Sharp)
+
+A C# package that enables direct communication with ROS:
+
+- Publish and subscribe to ROS topics
+- Call ROS services
+- Use ROS transforms and coordinate frames
+- Send and receive standard ROS message types
+
+### Unity Bridge for ROS 2
+
+More recent integration solutions for ROS 2:
+
+- Real-time bidirectional communication
+- Support for newer ROS 2 message types
+- Better performance for high-frequency messaging
+- Integration with ROS 2 launch files
+
+## Practical Exercise: Unity Perception Pipeline
+
+### Objective
+
+Create a Unity scene that simulates a perception task and generates synthetic training data.
+
+### Steps
+
+1. Create a new Unity 3D project
+2. Import Unity Robotics Hub and Perception Package
+3. Set up a camera with realistic parameters
+4. Create a scene with various objects for detection
+5. Configure the Perception Package to annotate the scene
+6. Generate synthetic datasets for training a computer vision model
+
+### Scene Creation
+
+Create a scene with:
+
+- A moving vehicle platform (simulated robot)
+- Various static objects (trees, buildings, signs)
+- Moving objects (pedestrians, other vehicles)
+- Changing lighting conditions
+- Different weather scenarios
+
+### Data Annotation
+
+Configure the Perception Package to capture:
+
+- RGB images
+- Depth maps
+- Semantic segmentation masks
+- Instance segmentation masks
+- Bounding boxes for all objects
+- 3D bounding boxes for objects
+
+## Comparing Simulation Results
+
+### Quantitative Metrics
+
+When comparing Unity and Gazebo results:
+
+- Sensor accuracy: Compare simulated sensor readings to real-world values
+- Physics fidelity: Validate motion predictions against real-world behavior
+- Computational performance: Benchmark simulation speed and resource usage
+- Perceptual quality: Evaluate how well each platform supports perception tasks
+
+### Qualitative Assessment
+
+Subjective evaluation of simulation quality:
+
+- Visual realism for perception tasks
+- Physics accuracy for control validation
+- Ease of use for scenario creation
+- Integration capabilities with robotics frameworks
+
+## Lab Exercise: Unity-Gazebo Comparison
+
+### Setup
+
+Compare a simple navigation task implemented in both Unity and Gazebo:
+
+1. Create a similar environment in both simulators
+2. Implement the same robot model with identical sensors
+3. Run a basic navigation algorithm in both platforms
+4. Record sensor readings, control commands, and robot trajectories
+
+### Analysis
+
+Compare the results across:
+
+- Trajectory similarity
+- Control signal differences
+- Sensor reading variations
+- Computational performance
+
+Document findings about when Unity might be preferred over Gazebo or vice versa.
+
+## Assessment
+
+Complete the [Unity-Gazebo Comparison Quiz](./assessments/quiz1.md) to test your understanding of when to use each simulation platform.
 
 ## Navigation
 
-[← Previous: Week 4-5: Simulation Environments](./week4-5.md) | [Next: Gazebo/Unity Module Conclusion](./conclusion.md) | [Module Home](./intro.md)
+[← Previous: Week 4-5: Simulation Environments (Gazebo)](./week4-5.md) | [Next: Module Conclusion](./conclusion.md) | [Module Home](./intro.md)
 
-Continue to [Gazebo/Unity Module Conclusion](./conclusion.md) to review what you've learned and how it connects to the next modules.
+Continue with [Module Conclusion](./conclusion.md) to review the Gazebo/Unity simulation concepts.

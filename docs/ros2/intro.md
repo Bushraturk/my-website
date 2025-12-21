@@ -3,7 +3,11 @@ title: Introduction to ROS 2
 sidebar_position: 1
 ---
 
+import ROS2Personalization from '@site/src/components/ROS2Personalization';
+
 # Introduction to ROS 2
+
+<ROS2Personalization />
 
 Welcome to Module 1 of the Physical AI & Humanoid Robotics course! In this module, you'll learn about the Robot Operating System (ROS 2), which serves as the nervous system of modern robotics.
 

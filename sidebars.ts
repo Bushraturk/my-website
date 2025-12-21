@@ -17,7 +17,15 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Introduction',
-      items: ['intro'],
+      items: [
+        'intro',
+        'home-test',
+        'translation-validation-test',
+        'translation-process-guide',
+        'mdx-components-guide',
+        'mdx-troubleshooting-guide',
+        'translation-feature-migration',
+      ],
       link: {
         type: 'doc',
         id: 'intro',
@@ -147,6 +155,14 @@ const sidebars: SidebarsConfig = {
       id: 'conclusion',
     },
     {
+      type: 'doc',
+      id: 'home-test',
+    },
+    {
+      type: 'doc',
+      id: 'test-mdx-component',
+    },
+    {
       type: 'category',
       label: 'Instructor Guide',
       collapsible: true,
@@ -154,6 +170,19 @@ const sidebars: SidebarsConfig = {
       items: [
         'instructor-guide/intro',
         'instructor-guide/offline-access',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Documentation',
+      collapsible: true,
+      collapsed: true,
+      items: [
+        'translation-validation-test',
+        'translation-process-guide',
+        'translation-feature-migration',
+        'mdx-components-guide',
+        'mdx-troubleshooting-guide',
       ],
     },
   ],

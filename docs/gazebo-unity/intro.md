@@ -3,7 +3,11 @@ title: Introduction to Gazebo/Unity - Digital Twin Environments
 sidebar_position: 5
 ---
 
+import GazeboUnityPersonalization from '@site/src/components/GazeboUnityPersonalization';
+
 # Introduction to Gazebo/Unity - Digital Twin Environments
+
+<GazeboUnityPersonalization />
 
 Welcome to Module 2 of the Physical AI & Humanoid Robotics course! In this module, you'll learn about simulation environments that act as digital twins for robotics development. We'll explore both Gazebo and Unity as platforms for creating realistic virtual worlds where robots can be tested safely and efficiently before deployment in the real world.
 

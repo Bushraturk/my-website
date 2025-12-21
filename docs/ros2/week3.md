@@ -1,8 +1,3 @@
----
-title: Week 3 - Advanced ROS 2 Concepts
-sidebar_position: 3
----
-
 # Week 3: Advanced ROS 2 Concepts
 
 ## Navigation
@@ -16,316 +11,526 @@ In this final week of the ROS 2 module, we'll explore advanced communication pat
 By the end of this week, you will be able to:
 
 - Implement service-server communication patterns in ROS 2
-- Create and use actions for goal-oriented tasks with feedback
-- Define and implement custom service and action interfaces
-- Manage parameters in ROS 2 systems with runtime configuration
-- Create and configure launch files to coordinate multiple nodes
-- Debug complex ROS 2 systems using command-line tools
-- Choose appropriate communication patterns (topics, services, actions) for different use cases
-- Integrate multiple ROS 2 concepts in a complete robotic system
+- Create and use actions for long-running tasks with feedback
+- Manage complex parameters and configurations at runtime
+- Implement advanced debugging and profiling techniques
+- Design robust architectures for multi-node systems
+- Integrate ROS 2 with external systems and hardware
 
-## Services in ROS 2
+## Advanced Communication Patterns
 
-Services provide synchronous request/response communication between nodes. Unlike topics which are asynchronous, services block until a response is received.
+### Services Deep Dive
 
-![Service Communication Pattern](/img/service-communication.png)
-
-The service communication pattern involves a client making a request to a server, which processes the request and returns a response. This is different from the publisher-subscriber pattern which is asynchronous.
-
-### Creating a Service
-
-First, define the service interface in a `.srv` file:
-
-```
-# AddTwoInts.srv
-int64 a
-int64 b
----
-int64 sum
-```
-
-This service definition creates a service that accepts two integers (a and b) and returns their sum.
-
-### Service Server Implementation
+Services provide request-reply communication for synchronous operations. Let's explore more complex service usage:
 
 ```python
+# Advanced service implementation with error handling
 import rclpy
 from rclpy.node import Node
-from example_interfaces.srv import AddTwoInts
+from example_interfaces.srv import Trigger
 
-
-class MinimalService(Node):
-    """
-    A minimal service server node that provides an AddTwoInts service.
-    This demonstrates how to create a service server in ROS 2.
-    """
+class AdvancedServiceNode(Node):
 
     def __init__(self):
-        # Initialize the node with the name 'minimal_service'
-        super().__init__('minimal_service')
-
-        # Create a service that will handle requests to the 'add_two_ints' service
-        # The callback method add_two_ints_callback will be called for each request
+        super().__init__('advanced_service_node')
         self.srv = self.create_service(
-            AddTwoInts,
-            'add_two_ints',
-            self.add_two_ints_callback
+            Trigger, 
+            'protected_operation', 
+            self.protected_operation_callback
         )
+        # Track service usage statistics
+        self.call_count = 0
 
-    def add_two_ints_callback(self, request, response):
-        """
-        Callback method that is called when a service request is received.
-        :param request: The request message containing the two integers to add
-        :param response: The response message that will be returned to the client
-        :return: The response message with the sum
-        """
-        # Calculate the sum of the two integers in the request
-        response.sum = request.a + request.b
-
-        # Log the incoming request for debugging purposes
-        self.get_logger().info(f'Incoming request\na={request.a}, b={request.b}')
-
-        # Return the response
+    def protected_operation_callback(self, request, response):
+        self.call_count += 1
+        self.get_logger().info(f'Service called {self.call_count} times')
+        
+        try:
+            # Simulate a complex operation
+            result = self.perform_complex_operation()
+            
+            if result.success:
+                response.success = True
+                response.message = f'Operation completed after {result.duration}s'
+            else:
+                response.success = False
+                response.message = f'Operation failed: {result.error_message}'
+                
+        except Exception as e:
+            response.success = False
+            response.message = f'Internal error: {str(e)}'
+            self.get_logger().error(f'Exception in service: {str(e)}')
+            
         return response
 
-
 def main(args=None):
-    """Main function to initialize and run the service server node."""
-    # Initialize the ROS 2 client library
     rclpy.init(args=args)
-
-    # Create an instance of the MinimalService class
-    minimal_service = MinimalService()
-
-    # Keep the node running until it's shut down
-    rclpy.spin(minimal_service)
-
-    # Clean up when the node is shut down
-    minimal_service.destroy_node()
-    rclpy.shutdown()
-
+    node = AdvancedServiceNode()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('Service interrupted by user')
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
 ```
 
-### Service Client Implementation
+### Actions Deep Dive
+
+Actions are perfect for long-running tasks with feedback and the ability to cancel:
 
 ```python
-import sys
+# Advanced action implementation with complex execution
 import rclpy
+from rclpy.action import ActionServer, GoalResponse, CancelResponse
 from rclpy.node import Node
-from example_interfaces.srv import AddTwoInts
+from example_interfaces.action import Fibonacci
 
-
-class MinimalClient(Node):
-    """
-    A minimal service client node that calls the AddTwoInts service.
-    This demonstrates how to create a service client in ROS 2.
-    """
+class AdvancedActionServer(Node):
 
     def __init__(self):
-        # Initialize the node with the name 'minimal_client'
-        super().__init__('minimal_client')
-
-        # Create a client for the 'add_two_ints' service
-        self.cli = self.create_client(AddTwoInts, 'add_two_ints')
-
-        # Wait for the service to become available
-        while not self.cli.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('Service not available, waiting again...')
-
-        # Create a request object to hold the parameters for the service call
-        self.req = AddTwoInts.Request()
-
-    def send_request(self, a, b):
-        """
-        Send a request to the service with two integers.
-        :param a: First integer
-        :param b: Second integer
-        :return: The result of the service call
-        """
-        # Set the values in the request
-        self.req.a = a
-        self.req.b = b
-
-        # Call the service asynchronously and return a future
-        future = self.cli.call_async(self.req)
-
-        # Wait for the result
-        rclpy.spin_until_future_complete(self, future)
-
-        # Return the result
-        return future.result()
-
-
-def main(args=None):
-    """Main function to initialize and run the service client node."""
-    # Initialize the ROS 2 client library
-    rclpy.init(args=args)
-
-    # Create an instance of the MinimalClient class
-    minimal_client = MinimalClient()
-
-    # Send a request with the first two command line arguments
-    if len(sys.argv) < 3:
-        print('Usage: ros2 run my_robot_tutorials client_member_function <int1> <int2>')
-        return
-
-    response = minimal_client.send_request(int(sys.argv[1]), int(sys.argv[2]))
-
-    # Log the result
-    minimal_client.get_logger().info(f'Result of add_two_ints: {response.sum}')
-
-    # Clean up when done
-    minimal_client.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
-```
-
-## Actions in ROS 2
-
-Actions are used for goal-oriented communication that may take a long time to complete. They provide feedback during execution and can be canceled.
-
-![Action Communication Pattern](/img/action-communication.png)
-
-### Action Structure
-
-An action has three parts:
-- **Goal**: The objective to be reached
-- **Feedback**: Status updates during execution
-- **Result**: The final outcome
-
-The diagram above illustrates how actions work. The client sends a goal to the action server, which provides feedback during execution. The client can also cancel the goal if needed, and eventually receives the result when the action completes.
-
-### Creating an Action
-
-Define the action interface in a `.action` file:
-
-```
-# Fibonacci.action
-int32 order
----
-int32[] sequence
----
-int32[] partial_sequence
-```
-
-## Parameters in ROS 2
-
-Parameters allow nodes to be configured at runtime. They can be set at launch time or changed dynamically.
-
-```python
-import rclpy
-from rclpy.node import Node
-
-
-class ParameterNode(Node):
-
-    def __init__(self):
-        super().__init__('parameter_node')
-        
-        # Declare parameters with default values
-        self.declare_parameter('robot_name', 'default_robot')
-        self.declare_parameter('max_velocity', 1.0)
-        
-        # Get parameter values
-        self.robot_name = self.get_parameter('robot_name').value
-        self.max_velocity = self.get_parameter('max_velocity').value
-        
-        self.get_logger().info(f'Robot: {self.robot_name}, Max velocity: {self.max_velocity}')
-
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = ParameterNode()
-    rclpy.spin(node)
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
-```
-
-## Launch Files
-
-Launch files allow you to start multiple nodes with a single command and specify their configuration.
-
-### Creating a Launch File
-
-Create `robot_launch.py`:
-
-```python
-from launch import LaunchDescription
-from launch_ros.actions import Node
-
-
-def generate_launch_description():
-    return LaunchDescription([
-        Node(
-            package='my_robot_tutorials',
-            executable='publisher_member_function',
-            name='talker',
-            parameters=[
-                {'param_name': 'param_value'}
-            ],
-            remappings=[
-                ('/original_topic_name', '/new_topic_name')
-            ]
-        ),
-        Node(
-            package='my_robot_tutorials',
-            executable='subscriber_member_function',
-            name='listener'
+        super().__init__('advanced_action_server')
+        self._action_server = ActionServer(
+            self,
+            Fibonacci,
+            'advanced_fibonacci',
+            execute_callback=self.execute_callback,
+            goal_callback=self.goal_callback,
+            cancel_callback=self.cancel_callback
         )
-    ])
+        
+        # Track ongoing goals
+        self.active_goals = {}
+
+    def goal_callback(self, goal_request):
+        """Accept or reject a goal request."""
+        # Accept all goals for this example
+        self.get_logger().info('Received goal request')
+        return GoalResponse.ACCEPT
+
+    def cancel_callback(self, goal_handle):
+        """Accept or reject a cancel request."""
+        self.get_logger().info('Received cancel request')
+        return CancelResponse.ACCEPT
+
+    def execute_callback(self, goal_handle):
+        """Execute the goal."""
+        self.get_logger().info('Executing goal...')
+        
+        # Notify that this goal is active
+        self.active_goals[goal_handle.goal_id.uuid] = True
+        
+        # Create messages for feedback and result
+        feedback_msg = Fibonacci.Feedback()
+        result_msg = Fibonacci.Result()
+        
+        # Start with the first two numbers in the sequence
+        feedback_msg.sequence = [0, 1]
+        
+        # Generate the Fibonacci sequence
+        for i in range(1, goal_handle.request.order):
+            # Check if this goal has been cancelled
+            if not self.active_goals.get(goal_handle.goal_id.uuid, False):
+                # Goal was cancelled
+                goal_handle.canceled()
+                result_msg.sequence = feedback_msg.sequence
+                self.get_logger().info('Goal canceled')
+                del self.active_goals[goal_handle.goal_id.uuid]
+                return result_msg
+            
+            # Generate the next number in the sequence
+            next_number = feedback_msg.sequence[i] + feedback_msg.sequence[i-1]
+            feedback_msg.sequence.append(next_number)
+            
+            # Publish feedback
+            goal_handle.publish_feedback(feedback_msg)
+            
+            # Simulate processing time
+            time.sleep(0.1)
+        
+        # Mark goal as succeeded
+        goal_handle.succeed()
+        result_msg.sequence = feedback_msg.sequence
+        self.get_logger().info(f'Goal succeeded with sequence: {result_msg.sequence}')
+        
+        # Remove from active goals
+        del self.active_goals[goal_handle.goal_id.uuid]
+        
+        return result_msg
+
+def main(args=None):
+    rclpy.init(args=args)
+    action_server = AdvancedActionServer()
+
+    try:
+        rclpy.spin(action_server)
+    except KeyboardInterrupt:
+        action_server.get_logger().info('Action server interrupted')
+    finally:
+        action_server.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    import time
+    main()
 ```
 
-## Debugging ROS 2 Systems
+## Advanced Parameter Management
 
-### ROS 2 Command Line Tools
+### Parameter Events and Callbacks
 
-- `ros2 node list`: List all active nodes
-- `ros2 node info <node_name>`: Get detailed information about a node
-- `ros2 topic list`: List all active topics
-- `ros2 topic echo <topic_name>`: Print messages from a topic
-- `ros2 service list`: List all available services
-- `ros2 action list`: List all available actions
+Handle parameter changes dynamically:
 
-### Visualization Tools
+```python
+from rclpy.parameter import Parameter
+from rclpy.node import Node
 
-- **RViz2**: 3D visualization for robot sensors and state
-- **rqt**: Graphical user interface for ROS tools
-- **ros2 bag**: Recording and playback of topic data
+class ParameterManagementNode(Node):
 
-## Practical Application
+    def __init__(self):
+        super().__init__('parameter_management_node')
+        
+        # Declare parameters with descriptions
+        self.declare_parameter('robot_name', 'turtlebot')
+        self.declare_parameter('max_speed', 1.0, 
+                              ParameterDescriptor(description='Maximum robot speed'))
+        self.declare_parameter('safety_radius', 0.5)
+        
+        # Set callback for parameter changes
+        self.add_on_set_parameters_callback(self.parameter_callback)
+        
+        # Track parameter history
+        self.param_history = {}
+    
+    def parameter_callback(self, params):
+        """Callback for parameter changes."""
+        result = SetParametersResult(successful=True)
+        
+        for param in params:
+            if param.name == 'max_speed':
+                # Validate parameter
+                if not (0.0 < param.value <= 5.0):
+                    result.successful = False
+                    result.reason = f'Max_speed must be between 0 and 5, got {param.value}'
+                    return result
+            
+            # Store in history
+            if param.name not in self.param_history:
+                self.param_history[param.name] = []
+            self.param_history[param.name].append(param.value)
+            
+            self.get_logger().info(f'Parameter {param.name} changed to {param.value}')
+        
+        return result
 
-In robotics, advanced ROS 2 concepts are used for:
+# Usage example
+def main(args=None):
+    rclpy.init(args=args)
+    node = ParameterManagementNode()
+    
+    # Change parameters programmatically
+    node.set_parameters([Parameter('max_speed', Parameter.Type.DOUBLE, 2.5)])
+    
+    # Spin for a bit
+    rclpy.spin_once(node, timeout_sec=1)
+    
+    # Print parameter history
+    print(f"Parameter history: {node.param_history}")
+    
+    node.destroy_node()
+    rclpy.shutdown()
+```
 
-- Navigation and path planning (using actions)
-- Sensor fusion (using services and parameters)
-- Multi-robot coordination (complex topic architectures)
-- Dynamic reconfiguration (parameters)
+## Hardware Integration
 
-## Lab Exercise Preview
+Integrate with real hardware components:
 
-In the next section, you'll find the detailed instructions for the advanced ROS 2 lab, where you'll implement a complete robotic system using services, actions, and parameters.
+```python
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import LaserScan
+from geometry_msgs.msg import Twist
+import serial  # For hardware communication
 
-## Summary
+class HardwareIntegrationNode(Node):
 
-In this week, you've learned:
+    def __init__(self):
+        super().__init__('hardware_integration_node')
+        
+        # Publisher for sending commands
+        self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        
+        # Subscriber for sensor data
+        self.scan_sub = self.create_subscription(
+            LaserScan,
+            'scan',
+            self.scan_callback,
+            10
+        )
+        
+        # Timer for hardware communication
+        self.hardware_timer = self.create_timer(0.1, self.hardware_update)
+        
+        # Connect to hardware
+        try:
+            self.hardware_interface = serial.Serial('/dev/ttyUSB0', baudrate=115200)
+            self.get_logger().info('Connected to hardware interface')
+        except serial.SerialException:
+            self.get_logger().error('Could not connect to hardware interface')
+            self.hardware_interface = None
 
-- How to implement service-server communication
-- How to use actions for goal-oriented tasks
-- How to manage parameters in ROS 2 systems
-- How to coordinate nodes with launch files
-- Techniques for debugging complex systems
+    def scan_callback(self, msg):
+        """Process laser scan data."""
+        # Find nearest obstacle
+        min_distance = min(msg.ranges)
+        self.get_logger().info(f'Nearest obstacle: {min_distance:.2f}m')
+
+    def hardware_update(self):
+        """Communicate with hardware."""
+        if self.hardware_interface and self.hardware_interface.is_open:
+            try:
+                # Read sensor data
+                data = self.hardware_interface.readline().decode().strip()
+                
+                # Send processed data to ROS topics
+                twist_msg = Twist()
+                # Parse data and set speeds
+                # ... processing logic here ...
+                
+                self.cmd_vel_pub.publish(twist_msg)
+                
+                self.get_logger().info(f'Sent command based on: {data}')
+            except Exception as e:
+                self.get_logger().error(f'Hardware communication error: {str(e)}')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = HardwareIntegrationNode()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('Shutting down hardware interface')
+        if node.hardware_interface:
+            node.hardware_interface.close()
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+```
+
+## Performance and Profiling
+
+### Memory and CPU Monitoring
+
+Monitor performance metrics in real-time:
+
+```python
+import psutil
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+
+class PerformanceMonitorNode(Node):
+
+    def __init__(self):
+        super().__init__('performance_monitor')
+        
+        # Publishers for different metrics
+        self.cpu_pub = self.create_publisher(Float32, 'cpu_usage', 10)
+        self.memory_pub = self.create_publisher(Float32, 'memory_usage', 10)
+        self.ros_rate_pub = self.create_publisher(Float32, 'ros_rate', 10)
+        
+        # Timer for periodic monitoring
+        self.monitor_timer = self.create_timer(1.0, self.monitor_performance)
+        
+        # Track ROS loop rate
+        self.loop_start_time = self.get_clock().now()
+        self.iteration_count = 0
+
+    def monitor_performance(self):
+        """Monitor system performance."""
+        # CPU usage
+        cpu_percent = psutil.cpu_percent(interval=1)
+        cpu_msg = Float32()
+        cpu_msg.data = float(cpu_percent)
+        self.cpu_pub.publish(cpu_msg)
+        
+        # Memory usage
+        memory_info = psutil.virtual_memory()
+        memory_msg = Float32()
+        memory_msg.data = float(memory_info.percent)
+        self.memory_pub.publish(memory_msg)
+        
+        # Calculate actual ROS loop rate
+        current_time = self.get_clock().now()
+        elapsed = (current_time - self.loop_start_time).nanoseconds / 1e9
+        actual_rate = self.iteration_count / elapsed if elapsed > 0 else 0
+        
+        rate_msg = Float32()
+        rate_msg.data = actual_rate
+        self.ros_rate_pub.publish(rate_msg)
+        
+        # Log warnings for high resource usage
+        if cpu_percent > 80:
+            self.get_logger().warning(f'High CPU usage: {cpu_percent}%')
+        
+        if memory_info.percent > 85:
+            self.get_logger().warning(f'High memory usage: {memory_info.percent}%')
+        
+        self.iteration_count += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = PerformanceMonitorNode()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('Performance monitoring stopped')
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+```
+
+## Advanced Debugging Techniques
+
+### Lifecycle Nodes
+
+Use lifecycle nodes for better control over node states:
+
+```python
+from rclpy.lifecycle import LifecycleNode, TransitionCallbackReturn
+from rclpy.lifecycle import LifecycleState
+
+class LifecycleManagedNode(LifecycleNode):
+
+    def __init__(self):
+        super().__init__('lifecycle_managed_node')
+        self.declare_parameter('initial_state', 'inactive')
+
+    def on_configure(self, state):
+        """Called when transitioning to configuring state."""
+        self.get_logger().info('Configuring node...')
+        
+        # Initialize resources
+        self.publisher = self.create_publisher(String, 'lifecycle_topic', 10)
+        self.timer = self.create_timer(1.0, self.timer_callback)
+        
+        # Disable timer until activated
+        self.timer.cancel()
+        
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_activate(self, state):
+        """Called when transitioning to activating state."""
+        self.get_logger().info('Activating node...')
+        
+        # Activate timer
+        self.timer.reset()
+        
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_deactivate(self, state):
+        """Called when transitioning to deactivating state."""
+        self.get_logger().info('Deactivating node...')
+        
+        # Deactivate timer
+        self.timer.cancel()
+        
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_cleanup(self, state):
+        """Called when transitioning to cleaningup state."""
+        self.get_logger().info('Cleaning up node...')
+        
+        # Destroy resources
+        self.destroy_publisher(self.publisher)
+        self.destroy_timer(self.timer)
+        
+        return TransitionCallbackReturn.SUCCESS
+
+    def timer_callback(self):
+        """Timer callback function."""
+        msg = String()
+        msg.data = f'Lifecycle node active at {self.get_clock().now()}'
+        self.publisher.publish(msg)
+```
+
+## Testing and Quality Assurance
+
+### Unit Testing for ROS 2 Nodes
+
+Write tests for your ROS 2 nodes:
+
+```python
+import unittest
+import rclpy
+from rclpy.executors import SingleThreadedExecutor
+from std_msgs.msg import String
+from simple_node import SimplePublisher  # Your node
+
+class TestSimplePublisher(unittest.TestCase):
+
+    def setUp(self):
+        rclpy.init()
+        self.node = SimplePublisher()
+        self.executor = SingleThreadedExecutor()
+        self.executor.add_node(self.node)
+
+    def tearDown(self):
+        self.node.destroy_node()
+        rclpy.shutdown()
+
+    def test_publisher_has_data(self):
+        """Test that publisher is publishing messages."""
+        received_messages = []
+        
+        def callback(msg):
+            received_messages.append(msg.data)
+        
+        # Create subscription to test publisher
+        subscription = self.node.create_subscription(
+            String,
+            'topic',
+            callback,
+            10
+        )
+        
+        # Spin to allow messages to be published and received
+        self.executor.spin_once(timeout_sec=2)
+        
+        # Check that messages were received
+        self.assertGreater(len(received_messages), 0)
+        self.assertIn('Hello World', received_messages[0])
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+## Practical Exercise: Complete Robot Control Node
+
+Create a robot control node that integrates all concepts:
+
+1. Implement a node that controls robot movement based on sensor input
+2. Use services for manual control commands
+3. Implement actions for navigation tasks
+4. Use parameters for configuration of robot behavior
+5. Add performance monitoring and logging
+
+## Homework Assignment
+
+1. Implement a complete robot control system that integrates sensors, actuators, and decision-making
+2. Create a state machine using lifecycle nodes to manage robot behavior
+3. Write unit tests for your robot control system
+4. Profile your system's performance and identify bottlenecks
+5. Document your system architecture and design decisions
 
 ## Navigation
 
-[← Previous: Week 1-2: ROS 2 Architecture](./week1-2.md) | [Next: ROS 2 Module Conclusion](./conclusion.md) | [Module Home](./intro.md)
+[← Previous: Week 1-2: ROS 2 Architecture and Fundamentals](./week1-2.md) | [Next: Module Conclusion](./conclusion.md) | [Module Home](./intro.md)
 
-You've completed the ROS 2 module! Continue to the [Course Introduction](../intro.md) to explore other modules as they become available.
+Continue to the [Module Conclusion](./conclusion.md) to review all ROS 2 concepts and prepare for the next module.

@@ -1,8 +1,3 @@
----
-title: Week 1-2 - ROS 2 Architecture and Fundamentals
-sidebar_position: 2
----
-
 # Week 1-2: ROS 2 Architecture and Fundamentals
 
 ## Navigation
@@ -16,215 +11,372 @@ In this two-week segment, we'll cover the foundational concepts of ROS 2, includ
 By the end of this week, you will be able to:
 
 - Explain the ROS 2 client library architecture and its components
-- Create and configure a ROS 2 workspace and package
-- Implement and execute a simple ROS 2 publisher node
-- Develop and run a ROS 2 subscriber node
-- Understand the DDS (Data Distribution Service) layer and its role in communication
-- Implement publisher-subscriber communication patterns with proper message handling
-- Use ROS 2 command-line tools to manage nodes and topics
-- Configure Quality of Service (QoS) settings for different communication requirements
+- Create and run basic nodes in Python
+- Implement publishers and subscribers for asynchronous communication
+- Develop services for synchronous request/response communication
+- Use actions for long-running tasks with feedback
+- Configure parameters at runtime
+- Debug and visualize ROS 2 applications
 
 ## ROS 2 Architecture Overview
 
-ROS 2 is built on a client library architecture that provides multiple language bindings (C++, Python, etc.) to a common underlying middleware. The middleware is typically DDS (Data Distribution Service), which provides the communication infrastructure.
+ROS 2 is built on a client library architecture that provides language-specific APIs for robot development. The key components are:
 
-![ROS 2 Architecture Diagram](/img/ros2-architecture.png)
+- **DDS Implementation**: Data Distribution Service provides the underlying communication layer
+- **ROS Middleware (RMW)**: Abstracts DDS details behind a consistent interface
+- **Client Libraries**: Language-specific APIs (rclcpp, rclpy) that simplify programming
+- **ROS APIs**: Higher-level abstractions built on client libraries
 
-### Key Components
+### DDS (Data Distribution Service)
 
-- **Nodes**: The basic unit of execution in ROS 2
-- **Communication Primitives**: Topics, Services, Actions
-- **DDS Implementation**: The middleware that handles message passing
-- **RCL**: ROS Client Library, the abstraction layer
-- **RCLCPP/RCLPY**: Language-specific client libraries
+DDS is a communications protocol and API standard for distributed computing. In ROS 2, DDS implementations provide:
 
-The architecture diagram above shows how these components interact. The client libraries (RCLCPP/RCLPY) provide language-specific interfaces to the DDS middleware, which handles the actual message passing between nodes.
+- **Discovery**: Automatic detection of nodes and topics
+- **Transport**: Reliable message delivery between components
+- **Quality of Service**: Configurable behavior for latency, reliability, etc.
+- **Security**: Encryption and authentication for secure communication
 
-![Publisher-Subscriber Communication Pattern](/img/publisher-subscriber-pattern.png)
+### Client Libraries
 
-The publisher-subscriber pattern is fundamental to ROS 2. Publishers send messages to topics, and subscribers receive messages from topics they're subscribed to. The DDS middleware handles the delivery of messages between publishers and subscribers.
+ROS 2 provides two primary client libraries:
 
-## Creating Your First ROS 2 Node
+- **rclcpp**: C++ client library with performance-focused design
+- **rclpy**: Python client library for easier prototyping and development
 
-Let's create a simple ROS 2 node in Python that publishes a message to a topic.
+## Nodes
 
-### Step 1: Setting Up the Package
+Nodes are the fundamental units of computation in ROS 2. Each node represents a single process that performs computation and communicates with other nodes.
 
-First, create a new ROS 2 package:
+### Node Lifecycle
 
-```bash
-mkdir -p ~/ros2_ws/src
-cd ~/ros2_ws/src
-ros2 pkg create --build-type ament_python my_robot_tutorials
-```
+A ROS 2 node typically follows this lifecycle:
 
-This command creates a new ROS 2 package named `my_robot_tutorials` with the Python build type.
-
-### Step 2: Creating the Publisher Node
-
-Create a file `publisher_member_function.py` in the `my_robot_tutorials/my_robot_tutorials` directory:
+1. **Unconfigured**: Node created but not yet configured
+2. **Inactive**: Node configured but not yet activated
+3. **Active**: Node running and processing callbacks
+4. **Finalized**: Node shutting down and destroying resources
 
 ```python
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
 
-
-class MinimalPublisher(Node):
-    """
-    A minimal publisher node that publishes messages to a topic.
-    This demonstrates the basic structure of a ROS 2 node.
-    """
+class MinimalNode(Node):
 
     def __init__(self):
-        # Initialize the node with the name 'minimal_publisher'
         super().__init__('minimal_publisher')
-
-        # Create a publisher that will publish String messages to the 'topic' topic
-        # The second parameter (10) is the queue size
         self.publisher_ = self.create_publisher(String, 'topic', 10)
-
-        # Set up a timer to call the timer_callback method every 0.5 seconds
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
-
-        # Counter to keep track of the number of messages published
         self.i = 0
 
     def timer_callback(self):
-        """Callback method that is called every time the timer expires."""
-        # Create a new String message
         msg = String()
-
-        # Set the data field of the message
-        msg.data = f'Hello World: {self.i}'
-
-        # Publish the message
+        msg.data = 'Hello World: %d' % self.i
         self.publisher_.publish(msg)
-
-        # Log the published message to the console
-        self.get_logger().info(f'Publishing: "{msg.data}"')
-
-        # Increment the counter for the next message
+        self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
 
-
 def main(args=None):
-    """Main function to initialize and run the publisher node."""
-    # Initialize the ROS 2 client library
     rclpy.init(args=args)
 
-    # Create an instance of the MinimalPublisher class
-    minimal_publisher = MinimalPublisher()
+    minimal_publisher = MinimalNode()
 
-    # Keep the node running until it's shut down
     rclpy.spin(minimal_publisher)
 
-    # Clean up when the node is shut down
     minimal_publisher.destroy_node()
     rclpy.shutdown()
 
-
 if __name__ == '__main__':
     main()
+```
 
-### Step 3: Creating the Subscriber Node
+## Topics and Message Passing
 
-Create a file `subscriber_member_function.py` in the same directory:
+Topics provide asynchronous communication between nodes using a publish-subscribe pattern.
+
+### Publishers
+
+A publisher node sends messages to a topic:
+
+```python
+import rclpy
+from std_msgs.msg import String
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    node = rclpy.create_node('publisher_node')
+    publisher = node.create_publisher(String, 'topic_name', 10)
+    
+    msg = String()
+    msg.data = 'Hello from publisher'
+    publisher.publish(msg)
+
+    node.destroy_node()
+    rclpy.shutdown()
+```
+
+### Subscribers
+
+A subscriber node receives messages from a topic:
 
 ```python
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 
-
 class MinimalSubscriber(Node):
-    """
-    A minimal subscriber node that listens to messages from a topic.
-    This demonstrates the basic structure of a ROS 2 subscriber node.
-    """
 
     def __init__(self):
-        # Initialize the node with the name 'minimal_subscriber'
         super().__init__('minimal_subscriber')
-
-        # Create a subscription to the 'topic' topic with String messages
-        # The callback method listener_callback will be called when a message is received
-        # The second parameter (10) is the queue size
         self.subscription = self.create_subscription(
             String,
-            'topic',
+            'topic_name',
             self.listener_callback,
             10)
-
-        # Prevent unused variable warning
-        self.subscription
+        self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        """
-        Callback method that is called when a message is received on the subscribed topic.
-        :param msg: The received message
-        """
-        # Log the received message to the console
-        self.get_logger().info(f'I heard: "{msg.data}"')
-
+        self.get_logger().info('I heard: "%s"' % msg.data)
 
 def main(args=None):
-    """Main function to initialize and run the subscriber node."""
-    # Initialize the ROS 2 client library
     rclpy.init(args=args)
 
-    # Create an instance of the MinimalSubscriber class
     minimal_subscriber = MinimalSubscriber()
 
-    # Keep the node running until it's shut down
     rclpy.spin(minimal_subscriber)
 
-    # Clean up when the node is shut down
     minimal_subscriber.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
 ```
 
-## DDS and Quality of Service (QoS)
+## Services
 
-DDS (Data Distribution Service) is the middleware that ROS 2 uses for communication. It provides Quality of Service (QoS) policies that allow you to control the behavior of communication between nodes.
+Services provide synchronous request-response communication:
 
-![DDS QoS Configuration](/img/dds-qos.png)
+```python
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
 
-### Common QoS Policies
+class MinimalService(Node):
 
-- **Reliability**: Best effort vs. reliable delivery
-- **Durability**: Volatile vs. transient local
-- **History**: Keep all vs. keep last N messages
-- **Deadline**: Maximum time between messages
-- **Liveliness**: How to determine if a participant is alive
+    def __init__(self):
+        super().__init__('minimal_service')
+        self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
 
-## Hands-On Practice
+    def add_two_ints_callback(self, request, response):
+        response.sum = request.a + request.b
+        self.get_logger().info('Incoming request\na: %d b: %d' % (request.a, request.b))
+        return response
 
-For this week's lab exercise, you'll implement a publisher-subscriber system that simulates sensor readings from a robot. The publisher will generate simulated sensor data (e.g., temperature readings), and the subscriber will process and log this data.
+def main(args=None):
+    rclpy.init(args=args)
 
-### Lab Exercise Preview
+    minimal_service = MinimalService()
 
-In the next section, you'll find the detailed instructions for the ROS 2 lab exercise, where you'll:
+    rclpy.spin(minimal_service)
 
-1. Create a publisher node that simulates sensor data
-2. Create a subscriber node that processes the data
-3. Experiment with different QoS policies
-4. Use ROS 2 tools to visualize and debug your system
+    rclpy.shutdown()
 
-## Summary
+if __name__ == '__main__':
+    main()
+```
 
-In this week, you've learned:
+## Actions
 
-- The fundamental architecture of ROS 2
-- How to create publisher and subscriber nodes
-- The role of DDS in ROS 2 communication
-- How to work with basic ROS 2 concepts
+Actions are used for long-running tasks that provide feedback:
+
+```python
+import rclpy
+from rclpy.action import ActionServer
+from rclpy.node import Node
+from example_interfaces.action import Fibonacci
+
+class FibonacciActionServer(Node):
+
+    def __init__(self):
+        super().__init__('fibonacci_action_server')
+        self._action_server = ActionServer(
+            self,
+            Fibonacci,
+            'fibonacci',
+            self.execute_callback)
+
+    def execute_callback(self, goal_handle):
+        self.get_logger().info('Executing goal...')
+        
+        feedback_msg = Fibonacci.Feedback()
+        feedback_msg.sequence = [0, 1]
+        
+        for i in range(1, goal_handle.request.order):
+            feedback_msg.sequence.append(
+                feedback_msg.sequence[i] + feedback_msg.sequence[i-1])
+            
+            self.get_logger().info('Publishing feedback: {feedback_msg.sequence}')
+            goal_handle.publish_feedback(feedback_msg)
+        
+        goal_handle.succeed()
+        
+        result = Fibonacci.Result()
+        result.sequence = feedback_msg.sequence
+        
+        return result
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    fibonacci_action_server = FibonacciActionServer()
+
+    rclpy.spin(fibonacci_action_server)
+
+if __name__ == '__main__':
+    main()
+```
+
+## Parameters
+
+Parameters provide a way to configure nodes at runtime:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+class ParamNode(Node):
+
+    def __init__(self):
+        super().__init__('param_node')
+        
+        # Declare parameters with default values
+        self.declare_parameter('param_name', 'default_value')
+        self.declare_parameter('other_param', 10)
+        
+        # Get parameter values
+        param_val = self.get_parameter('param_name').get_parameter_value().string_value
+        other_val = self.get_parameter('other_param').get_parameter_value().integer_value
+        
+        self.get_logger().info(f'param_name: {param_val}, other_param: {other_val}')
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    param_node = ParamNode()
+
+    rclpy.spin(param_node)
+
+    # Get updated parameter values during runtime
+    param_val = param_node.get_parameter('param_name').get_parameter_value().string_value
+    param_node.get_logger().info(f'Current param_name: {param_val}')
+
+    param_node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Quality of Service (QoS)
+
+QoS profiles control how messages are delivered in terms of reliability and durability:
+
+```python
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+
+# Create a QoS profile for reliable communication
+qos_profile = QoSProfile(
+    depth=10,
+    reliability=ReliabilityPolicy.RELIABLE,
+    durability=DurabilityPolicy.VOLATILE
+)
+
+# Publisher with specific QoS
+publisher = node.create_publisher(String, 'topic_name', qos_profile)
+
+# Subscriber with specific QoS  
+subscriber = node.create_subscription(
+    String,
+    'topic_name',
+    callback,
+    qos_profile
+)
+```
+
+## Launch Files
+
+Launch files allow multiple nodes to be started together with specific configurations:
+
+```python
+# launch/example_launch.py
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='demo_nodes_py',
+            executable='listener',
+            name='minimal_listener',
+        ),
+        Node(
+            package='demo_nodes_py',
+            executable='talker',
+            name='minimal_talker',
+        )
+    ])
+```
+
+To run: `ros2 launch demo_nodes_py example_launch.py`
+
+## Debugging and Visualization
+
+ROS 2 includes powerful tools for debugging and visualization:
+
+- **rqt**: Graphical user interface for inspecting topics, services, and nodes
+- **RViz2**: 3D visualization tool for displaying robot sensor data and state
+- **ros2 topic**: Command-line tools for inspecting topics
+- **ros2 service**: Command-line tools for using services
+- **ros2 bag**: Tools for recording and replaying ROS data
+
+### Common Debugging Commands
+
+```bash
+# List all active topics
+ros2 topic list
+
+# Echo messages on a topic
+ros2 topic echo /topic_name std_msgs/msg/String
+
+# List all active services
+ros2 service list
+
+# Call a service
+ros2 service call /service_name example_interfaces/srv/AddTwoInts "{a: 1, b: 2}"
+
+# List all active nodes
+ros2 node list
+```
+
+## Practical Exercise: Publisher-Subscriber Pair
+
+Create a simple publisher-subscriber pair to practice node creation and message passing:
+
+1. Create a publisher node that publishes counter values
+2. Create a subscriber node that receives and prints the counter values
+3. Use rqt_graph to visualize the node connection
+4. Use ros2 topic echo to view the published messages
+
+## Homework Assignment
+
+1. Implement a ROS 2 node that subscribes to a sensor topic and publishes processed data to another topic
+2. Create a launch file that starts both the sensor simulator and your processing node
+3. Use parameters to configure processing behavior at runtime
+4. Document the QoS settings used and why they were chosen
 
 ## Navigation
 
-[← Previous: Introduction to ROS 2](./intro.md) | [Next: Week 3: Advanced ROS 2 Concepts](./week3.md) | [Module Home](./intro.md)
+[← Previous: ROS 2 Introduction](./intro.md) | [Next: Week 3: Advanced ROS 2 Concepts](./week3.md) | [Module Home](./intro.md)
+
+Continue to [Week 3: Advanced ROS 2 Concepts](./week3.md) to build on these fundamentals with more advanced topics.

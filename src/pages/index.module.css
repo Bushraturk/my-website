@@ -12,6 +12,11 @@
   color: white;
 }
 
+[data-theme='dark'] .heroBanner {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1e3a5f 100%);
+  color: #e6e6e6;
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
@@ -22,6 +27,10 @@
   font-size: 1.2rem;
   margin: 1rem 0;
   opacity: 0.9;
+}
+
+[data-theme='dark'] .heroSubtitle {
+  color: #d6d6d6;
 }
 
 .buttons {
@@ -51,14 +60,27 @@
   color: #2c3e50;
 }
 
+[data-theme='dark'] .sectionTitle {
+  color: #e6e6e6;
+}
+
 .courseOverview {
   padding: 4rem 0;
   background-color: #f8f9fa;
 }
 
+[data-theme='dark'] .courseOverview {
+  background-color: #1a1a1a;
+  color: #e6e6e6;
+}
+
 .courseOverview p {
   font-size: 1.1rem;
   line-height: 1.7;
+}
+
+[data-theme='dark'] .courseOverview p {
+  color: #d6d6d6;
 }
 
 .justifiedText {
@@ -68,6 +90,10 @@
 .modulesSection {
   padding: 4rem 0;
   background-color: #fff;
+}
+
+[data-theme='dark'] .modulesSection {
+  background-color: #121212;
 }
 
 .moduleCard {
@@ -80,9 +106,19 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+[data-theme='dark'] .moduleCard {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  color: #e6e6e6;
+}
+
 .moduleCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='dark'] .moduleCard:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
 }
 
 .moduleIcon {
@@ -100,11 +136,19 @@
   color: #2c3e50;
 }
 
+[data-theme='dark'] .moduleTitle {
+  color: #e6e6e6;
+}
+
 .moduleWeeks {
   font-size: 0.9rem;
   color: #7f8c8d;
   margin: 0 0 1rem 0;
   font-weight: 500;
+}
+
+[data-theme='dark'] .moduleWeeks {
+  color: #b0b0b0;
 }
 
 .moduleDescription {
@@ -114,9 +158,17 @@
   line-height: 1.5;
 }
 
+[data-theme='dark'] .moduleDescription {
+  color: #d6d6d6;
+}
+
 .featuresSection {
   padding: 4rem 0;
   background-color: #f0f4f8;
+}
+
+[data-theme='dark'] .featuresSection {
+  background-color: #181818;
 }
 
 .featureCard {
@@ -126,6 +178,12 @@
   height: 100%;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .featureCard {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  color: #e6e6e6;
 }
 
 .featureIcon {
@@ -140,15 +198,27 @@
   color: #2c3e50;
 }
 
+[data-theme='dark'] .featureTitle {
+  color: #e6e6e6;
+}
+
 .featureDescription {
   font-size: 0.95rem;
   color: #34495e;
   line-height: 1.5;
 }
 
+[data-theme='dark'] .featureDescription {
+  color: #d6d6d6;
+}
+
 .quickAccessSection {
   padding: 4rem 0;
   background-color: #fff;
+}
+
+[data-theme='dark'] .quickAccessSection {
+  background-color: #121212;
 }
 
 .resourceCard {
@@ -161,8 +231,18 @@
   transition: transform 0.3s ease;
 }
 
+[data-theme='dark'] .resourceCard {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  color: #e6e6e6;
+}
+
 .resourceCard:hover {
   transform: translateY(-3px);
+}
+
+[data-theme='dark'] .resourceCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 .resourceIcon {
@@ -177,11 +257,19 @@
   color: #2c3e50;
 }
 
+[data-theme='dark'] .resourceTitle {
+  color: #e6e6e6;
+}
+
 .resourceDescription {
   font-size: 0.9rem;
   color: #34495e;
   margin-bottom: 1.5rem;
   line-height: 1.4;
+}
+
+[data-theme='dark'] .resourceDescription {
+  color: #d6d6d6;
 }
 
 .pagination-nav {

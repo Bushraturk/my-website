@@ -1,457 +1,771 @@
 ---
-title: Lab Exercise 2 - Unity Perception Pipeline Integration
-sidebar_position: 9
+title: Lab Exercise 2 - Sensor Integration in Simulation
+sidebar_position: 16
 ---
 
-# Lab Exercise 2: Unity Perception Pipeline Integration
+# Lab Exercise 2: Sensor Integration in Simulation
 
 ## Objective
 
-In this lab exercise, you will implement a perception pipeline using Unity's high-fidelity rendering to generate synthetic data for training an object detection model. You'll learn to create realistic environments, configure sensor models, and validate perception systems before real-world deployment.
+In this lab exercise, you will integrate various sensors into your simulated robot and process the simulated sensor data. You'll learn how to configure sensors in Gazebo, subscribe to sensor data streams, and implement basic perception algorithms using simulated sensor inputs.
 
 ## Learning Objectives
 
 After completing this lab, you will be able to:
-- Configure Unity for synthetic data generation
-- Set up realistic camera sensors with appropriate parameters
-- Create labeled datasets for object detection training
-- Compare perception results between Unity simulation and real-world data
-- Validate perception algorithms in a photo-realistic environment
+- Configure multiple sensor types in Gazebo simulation environment
+- Subscribe to and process simulated sensor data streams
+- Implement basic perception algorithms using simulated data
+- Compare simulated sensor data to real-world sensor characteristics
+- Integrate sensor data with robot navigation and control systems
 
 ## Prerequisites
 
-- Completion of Gazebo/Unity Week 6 content
-- Unity installation with Robotics packages
-- Basic knowledge of computer vision concepts
-- Understanding of object detection algorithms
+- Completion of Lab Exercise 1: Simulation Environment Setup
+- Understanding of ROS 2 message types for sensor data
+- Basic knowledge of sensor types (camera, LiDAR, IMU, etc.)
 
 ## Equipment Required
 
-- Computer with Unity Hub and Unity installed (2021.3 LTS or newer)
-- Unity Robotics Hub and Perception package installed
-- Python environment with OpenCV and related libraries
-- At least 8GB RAM recommended
+- Computer with Ubuntu 22.04 and ROS 2 Humble
+- Gazebo simulation environment
+- Completed simple robot model from Lab Exercise 1
 
 ## Lab Steps
 
-### Step 1: Setting Up Unity Environment
+### Step 1: Enhance Robot Model with Sensors
 
-1. Create a new Unity project for robotics simulation:
-   - Open Unity Hub
-   - Click "New Project"
-   - Select "3D (Built-in Render Pipeline)" template
-   - Name the project "UnityPerceptionTutorial"
-   - Make sure the render pipeline is compatible with Perception package
+1. Update your robot URDF to include sensor configurations. Modify the robot URDF from Lab 1 (`urdf/simple_robot.urdf`) to add a camera and LiDAR:
 
-2. Install required packages:
-   - Open the Package Manager (Window > Package Manager)
-   - Install "Unity Perception" package
-   - Install "Robotics" package
-   - Install "ROS# (Robot Operating System)" if you plan to interface with ROS
+   ```xml
+   <?xml version="1.0"?>
+   <robot name="sensor_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+     <!-- Materials -->
+     <material name="blue">
+       <color rgba="0.0 0.0 0.8 1.0"/>
+     </material>
+     <material name="green">
+       <color rgba="0.0 0.8 0.0 1.0"/>
+     </material>
+     <material name="red">
+       <color rgba="0.8 0.0 0.0 1.0"/>
+     </material>
 
-3. Set up the scene with realistic lighting:
-   - Add a Directional Light for sun simulation
-   - Configure Environment Lighting with realistic settings
-   - Add Reflection Probes for accurate reflections
+     <!-- Base Link -->
+     <link name="base_link">
+       <visual>
+         <geometry>
+           <box size="0.5 0.3 0.15"/>
+         </geometry>
+         <material name="green"/>
+       </visual>
+       <collision>
+         <geometry>
+           <box size="0.5 0.3 0.15"/>
+         </geometry>
+       </collision>
+       <inertial>
+         <mass value="5.0"/>
+         <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+       </inertial>
+     </link>
 
-### Step 2: Creating a Realistic Environment
+     <!-- Left Wheel -->
+     <link name="left_wheel">
+       <visual>
+         <geometry>
+           <cylinder radius="0.1" length="0.05"/>
+         </geometry>
+         <material name="red"/>
+       </visual>
+       <collision>
+         <geometry>
+           <cylinder radius="0.1" length="0.05"/>
+         </geometry>
+       </collision>
+       <inertial>
+         <mass value="0.5"/>
+         <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.02"/>
+       </inertial>
+     </link>
 
-1. Design a warehouse-like environment:
-   - Create floor using a large plane (10x10 units)
-   - Add warehouse shelving units using basic primitives
-   - Create objects to detect (cubes, spheres, cylinders)
-   - Add realistic materials to all objects
+     <!-- Right Wheel -->
+     <link name="right_wheel">
+       <visual>
+         <geometry>
+           <cylinder radius="0.1" length="0.05"/>
+         </geometry>
+         <material name="red"/>
+       </visual>
+       <collision>
+         <geometry>
+           <cylinder radius="0.1" length="0.05"/>
+         </geometry>
+       </collision>
+       <inertial>
+         <mass value="0.5"/>
+         <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.02"/>
+       </inertial>
+     </link>
 
-2. Configure environmental parameters:
-   ```csharp
-   using UnityEngine;
-   
-   public class EnvironmentManager : MonoBehaviour
-   {
-       [Header("Lighting Settings")]
-       public Light sunLight;
-       public Color ambientColor = Color.gray;
-       [Range(0, 2)] public float intensity = 1.0f;
-       
-       [Header("Weather Settings")]
-       [Range(0, 0.1f)] public float fogDensity = 0.0f;
-       
-       void Start()
-       {
-           // Configure lighting
-           RenderSettings.ambientLight = ambientColor;
-           sunLight.intensity = intensity;
-           
-           // Configure fog based on weather
-           RenderSettings.fog = true;
-           RenderSettings.fogDensity = fogDensity;
-           RenderSettings.fogColor = Color.Lerp(Color.white, ambientColor, 0.5f);
-       }
-   }
+     <!-- Camera Link -->
+     <link name="camera_link">
+       <visual>
+         <geometry>
+           <box size="0.05 0.1 0.03"/>
+         </geometry>
+         <material name="blue"/>
+       </visual>
+       <collision>
+         <geometry>
+           <box size="0.05 0.1 0.03"/>
+         </geometry>
+       </collision>
+       <inertial>
+         <mass value="0.1"/>
+         <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+       </inertial>
+     </link>
+
+     <!-- LiDAR Link -->
+     <link name="lidar_link">
+       <visual>
+         <geometry>
+           <cylinder radius="0.05" length="0.04"/>
+         </geometry>
+         <material name="red"/>
+       </visual>
+       <collision>
+         <geometry>
+           <cylinder radius="0.05" length="0.04"/>
+         </geometry>
+       </collision>
+       <inertial>
+         <mass value="0.15"/>
+         <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+       </inertial>
+     </link>
+
+     <!-- Joints -->
+     <joint name="base_to_left_wheel" type="continuous">
+       <parent link="base_link"/>
+       <child link="left_wheel"/>
+       <origin xyz="0.0 0.2 0.0" rpy="1.57079 0.0 0.0"/>
+       <axis xyz="0 0 1"/>
+     </joint>
+
+     <joint name="base_to_right_wheel" type="continuous">
+       <parent link="base_link"/>
+       <child link="right_wheel"/>
+       <origin xyz="0.0 -0.2 0.0" rpy="1.57079 0.0 0.0"/>
+       <axis xyz="0 0 1"/>
+     </joint>
+
+     <joint name="base_to_camera" type="fixed">
+       <parent link="base_link"/>
+       <child link="camera_link"/>
+       <origin xyz="0.2 0.0 0.1" rpy="0 0 0"/>
+     </joint>
+
+     <joint name="base_to_lidar" type="fixed">
+       <parent link="base_link"/>
+       <child link="lidar_link"/>
+       <origin xyz="0.0 0.0 0.15" rpy="0 0 0"/>
+     </joint>
+
+     <!-- Gazebo Plugins and Sensors -->
+     <gazebo reference="base_link">
+       <material>Gazebo/Green</material>
+       <mu1>0.2</mu1>
+       <mu2>0.2</mu2>
+     </gazebo>
+
+     <gazebo reference="left_wheel">
+       <material>Gazebo/Red</material>
+       <mu1>1.0</mu1>
+       <mu2>1.0</mu2>
+     </gazebo>
+
+     <gazebo reference="right_wheel">
+       <material>Gazebo/Red</material>
+       <mu1>1.0</mu1>
+       <mu2>1.0</mu2>
+     </gazebo>
+
+     <!-- Camera Sensor Configuration -->
+     <gazebo reference="camera_link">
+       <sensor name="camera_sensor" type="camera">
+         <update_rate>30</update_rate>
+         <camera name="head">
+           <horizontal_fov>1.3962634</horizontal_fov>
+           <image>
+             <width>640</width>
+             <height>480</height>
+             <format>R8G8B8</format>
+           </image>
+           <clip>
+             <near>0.1</near>
+             <far>100</far>
+           </clip>
+         </camera>
+         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+           <frame_name>camera_link</frame_name>
+           <topic_name>/camera/image_raw</topic_name>
+         </plugin>
+       </sensor>
+     </gazebo>
+
+     <!-- LiDAR Sensor Configuration -->
+     <gazebo reference="lidar_link">
+       <sensor name="lidar_sensor" type="ray">
+         <update_rate>10</update_rate>
+         <ray>
+           <scan>
+             <horizontal>
+               <samples>360</samples>
+               <resolution>1.0</resolution>
+               <min_angle>-3.14159</min_angle>
+               <max_angle>3.14159</max_angle>
+             </horizontal>
+           </scan>
+           <range>
+             <min>0.1</min>
+             <max>10.0</max>
+             <resolution>0.01</resolution>
+           </range>
+         </ray>
+         <plugin name="lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+           <ros>
+             <namespace>lidar</namespace>
+             <remapping>~/out:=scan</remapping>
+           </ros>
+           <output_type>sensor_msgs/LaserScan</output_type>
+         </plugin>
+       </sensor>
+     </gazebo>
+   </robot>
    ```
 
-### Step 3: Setting Up Sensor Simulation
+### Step 2: Create New Launch File for Sensor Robot
 
-1. Create a robot with a camera sensor:
-   - Create an empty GameObject named "Robot"
-   - Add a simple cube as the robot body
-   - Position a camera at the front of the robot (e.g., at position [0.3, 0.5, 0])
+1. Create a new launch file (`launch/sensor_robot.launch.py`):
 
-2. Configure the Perception Camera:
-   - Attach the "Camera Sensor" component from the Perception package to the camera
-   - Set the Camera ID to "perception_cam"
-   - Configure the following parameters:
-     - Width: 640
-     - Height: 480
-     - Field of View: 60°
-     - Enable Semantic Segmentation
-     - Enable Bounding Box generation
-
-3. Implement the camera setup script:
-   ```csharp
-   using UnityEngine;
-   using Unity.Robotics.Sensors;
-   using Unity.Robotics.Perception;
-   using Unity.Robotics.Perception.GroundTruth;
-   
-   public class PerceptionCameraSetup : MonoBehaviour
-   {
-       [SerializeField] private Sensor sensor;
-       [SerializeField] private Camera cam;
-       
-       [Header("Camera Properties")]
-       [Range(30f, 120f)] public float fieldOfView = 60f;
-       [Range(0.1f, 1000f)] public float nearClip = 0.1f;
-       [Range(1f, 1000f)] public float farClip = 100f;
-       
-       [Header("Perception Settings")]
-       public bool enableSegmentation = true;
-       public bool enableBbLabeler = true;
-       public bool enableOpticalFlow = false;
-       
-       void Start()
-       {
-           ConfigureCamera();
-           ConfigurePerceptionComponents();
-       }
-       
-       void ConfigureCamera()
-       {
-           cam.fieldOfView = fieldOfView;
-           cam.nearClipPlane = nearClip;
-           cam.farClipPlane = farClip;
-       }
-       
-       void ConfigurePerceptionComponents()
-       {
-           if (enableSegmentation)
-           {
-               var segLabeler = sensor.GetComponent<SegmentationLabeler>();
-               if (segLabeler == null)
-                   segLabeler = sensor.gameObject.AddComponent<SegmentationLabeler>();
-           }
-           
-           if (enableBbLabeler)
-           {
-               var bbLabeler = sensor.GetComponent<BoundingBoxLabeler>();
-               if (bbLabeler == null)
-                   bbLabeler = sensor.gameObject.AddComponent<BoundingBoxLabeler>();
-           }
-           
-           if (enableOpticalFlow)
-           {
-               var optFlowLabeler = sensor.GetComponent<OpticalFlowLabeler>();
-               if (optFlowLabeler == null)
-                   optFlowLabeler = sensor.gameObject.AddComponent<OpticalFlowLabeler>();
-           }
-       }
-   }
-   ```
-
-### Step 4: Adding Objects for Detection
-
-1. Create object prefabs with semantic labels:
-   - Create a cube prefab named "Box"
-   - Create a sphere prefab named "Ball"
-   - Create a cylinder prefab named "Can"
-
-2. Assign semantic labels to objects:
-   ```csharp
-   using Unity.Robotics.Perception;
-   using UnityEngine;
-   
-   public class ObjectSemanticLabel : MonoBehaviour, ISegmentable
-   {
-       [SerializeField] private string semanticLabel = "object";
-       [SerializeField] private int semanticId = -1;
-       
-       public string GetSemanticLabel()
-       {
-           return semanticLabel;
-       }
-       
-       public int GetSemanticId()
-       {
-           if (semanticId == -1)
-           {
-               // Auto assign ID if not set
-               semanticId = SegmentationTagManager.Instance.GetNextAvailableId();
-           }
-           return semanticId;
-       }
-   }
-   ```
-
-3. Place objects randomly in the environment:
-   ```csharp
-   using UnityEngine;
-   using System.Collections.Generic;
-   using System.Linq;
-   
-   public class RandomObjectSpawner : MonoBehaviour
-   {
-       [Header("Object Prefabs")]
-       public GameObject[] objectPrefabs;
-       
-       [Header("Environment Settings")]
-       public Vector2 spawnArea = new Vector2(8, 8);  // Range for x and z coordinates
-       [Range(0, 5)] public float minHeight = 0.3f;
-       [Range(0, 5)] public float maxHeight = 2f;
-       
-       [Header("Spawn Settings")]
-       [Range(1, 50)] public int maxObjects = 10;
-       
-       private List<GameObject> spawnedObjects = new List<GameObject>();
-       
-       void Start()
-       {
-           SpawnObjects();
-       }
-       
-       public void SpawnObjects()
-       {
-           // Clear previous objects
-           foreach (var obj in spawnedObjects)
-           {
-               if (obj != null) DestroyImmediate(obj);
-           }
-           spawnedObjects.Clear();
-           
-           int numToSpawn = Random.Range(3, maxObjects + 1);
-           
-           for (int i = 0; i < numToSpawn; i++)
-           {
-               SpawnSingleObject();
-           }
-       }
-       
-       void SpawnSingleObject()
-       {
-           if (objectPrefabs.Length == 0) return;
-           
-           // Select random prefab
-           GameObject prefab = objectPrefabs[Random.Range(0, objectPrefabs.Length)];
-           
-           // Generate random position
-           Vector3 pos = new Vector3(
-               Random.Range(-spawnArea.x/2, spawnArea.x/2),
-               Random.Range(minHeight, maxHeight),
-               Random.Range(-spawnArea.y/2, spawnArea.y/2)
-           );
-           
-           // Create object and store reference
-           GameObject instance = Instantiate(prefab, pos, Quaternion.identity);
-           instance.transform.SetParent(transform);
-           spawnedObjects.Add(instance);
-       }
-   }
-   ```
-
-### Step 5: Configuring Synthetic Data Generation
-
-1. Set up the Perception Camera Controller:
-   ```csharp
-   using Unity.Robotics.Perception;
-   using UnityEngine;
-   using System.Collections.Generic;
-   
-   public class PerceptionController : MonoBehaviour
-   {
-       [Header("Capture Settings")]
-       [Range(0.1f, 2f)] public float captureInterval = 1f;
-       public string outputDirectory = "PerceptionOutput";
-       public int numFramesToCapture = 100;
-       
-       [Header("Annotation Settings")]
-       public bool captureRGB = true;
-       public bool captureDepth = false;
-       public bool captureSegmentation = true;
-       public bool captureBoundingBoxes = true;
-       
-       private int frameCount = 0;
-       private float lastCaptureTime;
-       
-       void Start()
-       {
-           lastCaptureTime = Time.time;
-           
-           // Configure perception manager
-           PerceptionManager.Instance.outputDirectory = outputDirectory;
-           PerceptionManager.Instance.maxNumSamples = numFramesToCapture;
-       }
-       
-       void Update()
-       {
-           if (frameCount >= numFramesToCapture) return;
-           
-           if (Time.time - lastCaptureTime >= captureInterval)
-           {
-               CaptureFrame();
-               lastCaptureTime = Time.time;
-               frameCount++;
-           }
-       }
-       
-       void CaptureFrame()
-       {
-           // Generate random environmental variations for more diverse data
-           GenerateEnvironmentalVariations();
-           
-           // Trigger perception capture
-           PerceptionManager.Instance.CaptureSample();
-           
-           Debug.Log($"Captured frame {frameCount}/{numFramesToCapture}");
-       }
-       
-       void GenerateEnvironmentalVariations()
-       {
-           // Change lighting conditions
-           var lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
-           foreach (var light in lights)
-           {
-               // Add slight variations to lighting
-               light.intensity = Random.Range(0.8f, 1.2f);
-           }
-           
-           // Change material colors slightly
-           var renderers = FindObjectsByType<Renderer>(FindObjectsSortMode.None);
-           foreach (var renderer in renderers)
-           {
-               if (renderer.material.HasProperty("_Color"))
-               {
-                   var baseColor = renderer.material.color;
-                   var variation = new Color(
-                       Mathf.Clamp01(baseColor.r + Random.Range(-0.1f, 0.1f)),
-                       Mathf.Clamp01(baseColor.g + Random.Range(-0.1f, 0.1f)),
-                       Mathf.Clamp01(baseColor.b + Random.Range(-0.1f, 0.1f)),
-                       baseColor.a
-                   );
-                   renderer.material.color = variation;
-               }
-           }
-       }
-   }
-   ```
-
-### Step 6: Running the Simulation and Collecting Data
-
-1. Set up the Unity scene:
-   - Add the PerceptionCameraSetup script to your camera
-   - Add the RandomObjectSpawner to a GameObject in your scene
-   - Add the PerceptionController to manage data collection
-   - Create prefabs for the objects to detect with semantic labels
-
-2. Configure the Perception Manager:
-   - In the Unity menu, go to Window > Perception > Perception Manager
-   - Set up the required settings for data capture
-   - Configure annotation types you want to capture
-
-3. Run the simulation:
-   - Press Play in Unity
-   - The simulation will automatically capture frames with annotations
-   - Data will be saved to the specified output directory
-
-### Step 7: Analyzing Captured Data
-
-1. The captured data will include:
-   - RGB images
-   - Semantic segmentation masks
-   - Bounding box annotations
-   - Metadata files with camera parameters
-
-2. You can load and visualize the data using Python:
    ```python
-   import cv2
-   import numpy as np
-   import json
    import os
+   from launch import LaunchDescription
+   from launch.actions import ExecuteProcess
+   from launch_ros.actions import Node
+   from ament_index_python.packages import get_package_share_directory
+
+
+   def generate_launch_description():
+       package_dir = get_package_share_directory('simple_robot_description')
+       
+       # Launch Gazebo with custom world
+       gazebo = ExecuteProcess(
+           cmd=['gz', 'sim', '-r', os.path.join(package_dir, 'launch', 'simple_world.sdf')],
+           output='screen'
+       )
+
+       # Robot State Publisher node
+       robot_state_publisher = Node(
+           package='robot_state_publisher',
+           executable='robot_state_publisher',
+           name='robot_state_publisher',
+           parameters=[{
+               'robot_description': open(os.path.join(package_dir, 'urdf', 'sensor_robot.urdf')).read()
+           }]
+       )
+
+       # Spawn robot in Gazebo
+       spawn_entity = Node(
+           package='gazebo_ros',
+           executable='spawn_entity.py',
+           arguments=[
+               '-topic', 'robot_description',
+               '-entity', 'sensor_robot',
+               '-x', '0.0',
+               '-y', '0.0',
+               '-z', '0.15'
+           ],
+           output='screen'
+       )
+
+       # Camera and LiDAR processing nodes would be added in Step 6
+
+       return LaunchDescription([
+           gazebo,
+           robot_state_publisher,
+           spawn_entity
+       ])
+   ```
+
+### Step 3: Verify Sensor Data Streams
+
+1. Build your updated package:
+   ```bash
+   cd ~/gazebo_lab_ws
+   colcon build --packages-select simple_robot_description
+   source install/setup.bash
+   ```
+
+2. Launch the updated robot:
+   ```bash
+   ros2 launch simple_robot_description sensor_robot.launch.py
+   ```
+
+3. In a new terminal, verify that sensor topics are being published:
+   ```bash
+   # Check all topics
+   ros2 topic list
    
-   def visualize_annotations(rgb_path, seg_path, bboxes_path):
-       # Load RGB image
-       rgb_img = cv2.imread(rgb_path)
-       
-       # Load segmentation mask
-       seg_img = cv2.imread(seg_path, cv2.IMREAD_UNCHANGED)
-       
-       # Load bounding box annotations
-       with open(bboxes_path, 'r') as f:
-           bboxes_data = json.load(f)
-       
-       # Draw bounding boxes on the RGB image
-       for bbox in bboxes_data['captures'][0]['annotations']:
-           if bbox['id'] == '2d_bounding_box':
-               for box in bbox['data']:
-                   # Extract bounding box coordinates
-                   x_min = int(box['x'])
-                   y_min = int(box['y'])
-                   x_max = x_min + int(box['width'])
-                   y_max = y_min + int(box['height'])
+   # Verify camera data
+   ros2 topic echo /camera/image_raw --field data
+   
+   # Verify LiDAR data
+   ros2 topic echo /scan --field ranges
+   ```
+
+### Step 4: Create Basic Perception Node
+
+1. Create a perception processing node (`scripts/perception_node.py`):
+
+   ```python
+   #!/usr/bin/env python3
+   
+   import rclpy
+   from rclpy.node import Node
+   from sensor_msgs.msg import Image, LaserScan
+   from cv_bridge import CvBridge
+   import numpy as np
+   import cv2
+   from std_msgs.msg import Float32
+   from geometry_msgs.msg import Twist
+
+
+   class PerceptionNode(Node):
+       def __init__(self):
+           super().__init__('perception_node')
+           
+           # Initialize CvBridge for image processing
+           self.bridge = CvBridge()
+           
+           # Create subscriptions
+           self.camera_subscriber = self.create_subscription(
+               Image,
+               '/camera/image_raw',
+               self.camera_callback,
+               10
+           )
+           
+           self.lidar_subscriber = self.create_subscription(
+               LaserScan,
+               '/scan',
+               self.lidar_callback,
+               10
+           )
+           
+           # Create publishers for processed data
+           self.object_distance_publisher = self.create_publisher(
+               Float32,
+               '/object_distance',
+               10
+           )
+           
+           self.cmd_vel_publisher = self.create_publisher(
+               Twist,
+               '/cmd_vel',
+               10
+           )
+           
+           # State variables
+           self.latest_image = None
+           self.latest_scan = None
+           self.object_detected = False
+           self.object_distance = Float32()
+           self.object_distance.data = float('inf')
+           
+           self.get_logger().info("Perception Node Initialized")
+
+       def camera_callback(self, msg):
+           """Process incoming camera images"""
+           try:
+               # Convert ROS Image message to OpenCV image
+               cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+               self.latest_image = cv_image
+               
+               # Simple color-based object detection (detecting red objects)
+               hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
+               
+               # Define range for red color
+               lower_red = np.array([0, 50, 50])
+               upper_red = np.array([10, 255, 255])
+               mask1 = cv2.inRange(hsv, lower_red, upper_red)
+               
+               lower_red = np.array([170, 50, 50])
+               upper_red = np.array([180, 255, 255])
+               mask2 = cv2.inRange(hsv, lower_red, upper_red)
+               
+               mask = mask1 + mask2
+               
+               # Apply morphological operations to reduce noise
+               kernel = np.ones((5,5), np.uint8)
+               mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+               mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+               
+               # Find contours
+               contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+               
+               if contours:
+                   # Find the largest contour
+                   largest_contour = max(contours, key=cv2.contourArea)
+                   if cv2.contourArea(largest_contour) > 100:  # Minimum area threshold
+                       self.object_detected = True
+                       self.get_logger().info("Red object detected!")
+                   else:
+                       self.object_detected = False
+               else:
+                   self.object_detected = False
                    
-                   # Draw bounding box
-                   cv2.rectangle(rgb_img, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-                   cv2.putText(rgb_img, box['label'], (x_min, y_min - 10), 
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+           except Exception as e:
+               self.get_logger().error(f"Error processing camera image: {e}")
+
+       def lidar_callback(self, msg):
+           """Process incoming LiDAR scan data"""
+           try:
+               # Find closest obstacle in front of robot (within 30 degrees)
+               front_scan = msg.ranges[:15] + msg.ranges[-15:]  # Approximate front 30 degrees
+               
+               # Filter out invalid measurements (inf, nan)
+               valid_distances = [d for d in front_scan if d != float('inf') and not np.isnan(d)]
+               
+               if valid_distances:
+                   min_distance = min(valid_distances)
+                   self.object_distance.data = min_distance
+                   
+                   # Publish the closest distance
+                   self.object_distance_publisher.publish(self.object_distance)
+                   
+                   self.get_logger().info(f"Closest obstacle: {min_distance:.2f}m")
+               else:
+                   self.object_distance.data = float('inf')
+                   
+           except Exception as e:
+               self.get_logger().error(f"Error processing LiDAR data: {e}")
+
+       def run_navigation_logic(self):
+           """Simple navigation based on sensor inputs"""
+           cmd_msg = Twist()
+           
+           # If we detect an object both visually and with LiDAR, stop
+           if self.object_detected and self.object_distance.data < 1.0:
+               cmd_msg.linear.x = 0.0
+               cmd_msg.angular.z = 0.0
+               self.get_logger().info("Stopping: obstacle detected!")
+           elif self.object_distance.data < 0.5:
+               # Too close to obstacle, stop and turn
+               cmd_msg.linear.x = 0.0
+               cmd_msg.angular.z = 0.5  # Turn right
+           else:
+               # Go forward if no obstacles
+               cmd_msg.linear.x = 0.3
+               cmd_msg.angular.z = 0.0
+               
+           # Publish command
+           self.cmd_vel_publisher.publish(cmd_msg)
+
+
+   def main(args=None):
+       rclpy.init(args=args)
+       perception_node = PerceptionNode()
        
-       # Show the annotated image
-       cv2.imshow('Annotated Image', rgb_img)
-       cv2.waitKey(0)
-       cv2.destroyAllWindows()
-   
-   # Example usage
-   visualize_annotations(
-       'PerceptionOutput/frame_000000.color.png',
-       'PerceptionOutput/frame_000000.segmentation.png',
-       'PerceptionOutput/frame_000000.json'
+       # Create a timer to run navigation logic at 10Hz
+       timer = perception_node.create_timer(0.1, perception_node.run_navigation_logic)
+       
+       try:
+           rclpy.spin(perception_node)
+       except KeyboardInterrupt:
+           perception_node.get_logger().info("Shutting down perception node...")
+       finally:
+           # Stop the robot when shutting down
+           cmd_stop = Twist()
+           cmd_stop.linear.x = 0.0
+           cmd_stop.angular.z = 0.0
+           perception_node.cmd_vel_publisher.publish(cmd_stop)
+           perception_node.destroy_node()
+           rclpy.shutdown()
+
+
+   if __name__ == '__main__':
+       main()
+   ```
+
+### Step 5: Update the Launch File to Include Perception Node
+
+1. Modify the launch file to include the perception node:
+
+   ```python
+   # Updated version of launch/sensor_robot.launch.py
+   import os
+   from launch import LaunchDescription
+   from launch.actions import ExecuteProcess, RegisterEventHandler
+   from launch.event_handlers import OnProcessStart
+   from launch_ros.actions import Node
+   from ament_index_python.packages import get_package_share_directory
+
+
+   def generate_launch_description():
+       package_dir = get_package_share_directory('simple_robot_description')
+       
+       # Launch Gazebo with custom world
+       gazebo = ExecuteProcess(
+           cmd=['gz', 'sim', '-r', os.path.join(package_dir, 'launch', 'simple_world.sdf')],
+           output='screen'
+       )
+
+       # Robot State Publisher node
+       robot_state_publisher = Node(
+           package='robot_state_publisher',
+           executable='robot_state_publisher',
+           name='robot_state_publisher',
+           parameters=[{
+               'robot_description': open(os.path.join(package_dir, 'urdf', 'sensor_robot.urdf')).read()
+           }]
+       )
+
+       # Spawn robot in Gazebo
+       spawn_entity = Node(
+           package='gazebo_ros',
+           executable='spawn_entity.py',
+           arguments=[
+               '-topic', 'robot_description',
+               '-entity', 'sensor_robot',
+               '-x', '0.0',
+               '-y', '0.0',
+               '-z', '0.15'
+           ],
+           output='screen'
+       )
+
+       # Perception node
+       perception_node = Node(
+           package='simple_robot_description',
+           executable='perception_node',
+           name='perception_node',
+           output='screen'
+       )
+
+       # Create launch description
+       ld = LaunchDescription()
+       
+       # Add the primary nodes
+       ld.add_action(gazebo)
+       ld.add_action(robot_state_publisher)
+       ld.add_action(spawn_entity)
+       
+       # Add perception node after spawn is complete
+       ld.add_action(
+           RegisterEventHandler(
+               OnProcessStart(
+                   target_action=spawn_entity,
+                   on_start=[perception_node],
+               )
+           )
+       )
+       
+       return ld
+   ```
+
+### Step 6: Create Package Configuration
+
+1. Create a proper `package.xml` file for your robot description package:
+
+   ```xml
+   <?xml version="1.0"?>
+   <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+   <package format="3">
+     <name>simple_robot_description</name>
+     <version>0.0.1</version>
+     <description>Simple robot model with sensors for simulation lab</description>
+     <maintainer email="student@university.edu">Student</maintainer>
+     <license>Apache-2.0</license>
+
+     <buildtool_depend>ament_cmake</buildtool_depend>
+
+     <depend>gazebo_ros_pkgs</depend>
+     <depend>robot_state_publisher</depend>
+     <depend>geometry_msgs</depend>
+     <depend>sensor_msgs</depend>
+     <depend>cv_bridge</depend>
+     <depend>rclpy</depend>
+
+     <exec_depend>ros_gz</exec_depend>
+     <exec_depend>gazebo_ros</exec_depend>
+
+     <export>
+       <build_type>ament_python</build_type>
+     </export>
+   </package>
+   ```
+
+2. Create a `setup.py` file:
+
+   ```python
+   from setuptools import setup
+   import os
+   from glob import glob
+
+   package_name = 'simple_robot_description'
+
+   setup(
+       name=package_name,
+       version='0.0.1',
+       packages=[package_name],
+       data_files=[
+           ('share/ament_index/resource_index/packages',
+               ['resource/' + package_name]),
+           ('share/' + package_name, ['package.xml']),
+           (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
+           (os.path.join('share', package_name, 'launch'), glob('launch/*')),
+           (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
+       ],
+       install_requires=['setuptools'],
+       zip_safe=True,
+       maintainer='Student',
+       maintainer_email='student@university.edu',
+       description='Simple robot model with sensors for simulation lab',
+       license='Apache-2.0',
+       tests_require=['pytest'],
+       entry_points={
+           'console_scripts': [
+               'perception_node = simple_robot_description.perception_node:main',
+               'move_robot = simple_robot_description.move_robot:main',
+           ],
+       },
    )
    ```
 
-## Expected Results
+### Step 7: Test Integrated Perception System
 
-- The Unity simulation should generate diverse, photo-realistic images
-- Each image should have corresponding annotations (segmentation, bounding boxes)
-- The robot should navigate through various environmental conditions
-- The captured data should be suitable for training computer vision models
+1. Make sure your scripts are executable:
+   ```bash
+   chmod +x ~/gazebo_lab_ws/src/simple_robot_description/scripts/perception_node.py
+   ```
+
+2. Build and run the complete system:
+   ```bash
+   cd ~/gazebo_lab_ws
+   colcon build --packages-select simple_robot_description
+   source install/setup.bash
+   ros2 launch simple_robot_description sensor_robot.launch.py
+   ```
+
+3. Monitor the perception node's output in another terminal:
+   ```bash
+   source ~/gazebo_lab_ws/install/setup.bash
+   ros2 run simple_robot_description perception_node
+   ```
+
+4. Visualize the sensor data in RViz:
+   ```bash
+   source ~/gazebo_lab_ws/install/setup.bash
+   ros2 run rviz2 rviz2
+   # Add displays for camera feed and LiDAR scan
+   ```
+
+### Step 8: Advanced Perception Task
+
+1. Implement a simple object tracking algorithm by enhancing the perception node to track the detected object:
+
+   ```python
+   # Additional method to add to perception_node.py
+   
+   def detect_and_track_object(self, cv_image):
+       """Detect and track colored objects in the image"""
+       hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
+       
+       # Define range for blue color (you can try detecting different colors)
+       lower_blue = np.array([100, 50, 50])
+       upper_blue = np.array([130, 255, 255])
+       mask = cv2.inRange(hsv, lower_blue, upper_blue)
+       
+       # Apply morphological operations
+       kernel = np.ones((5,5), np.uint8)
+       mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+       mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+       
+       # Find contours
+       contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+       
+       if contours:
+           # Find the largest contour
+           largest_contour = max(contours, key=cv2.contourArea)
+           if cv2.contourArea(largest_contour) > 500:  # Minimum area threshold
+               # Get the center of the contour
+               M = cv2.moments(largest_contour)
+               if M["m00"] != 0:
+                   cx = int(M["m10"] / M["m00"])
+                   cy = int(M["m01"] / M["m00"])
+                   
+                   # Calculate the horizontal position relative to image center
+                   img_center_x = cv_image.shape[1] / 2
+                   horizontal_error = cx - img_center_x
+                   
+                   # Normalize to -1 (left) to 1 (right)
+                   normalized_position = horizontal_error / (cv_image.shape[1] / 2)
+                   
+                   return True, normalized_position
+       
+       return False, 0.0
+   ```
+
+## Lab Report
+
+Submit a lab report including:
+
+1. **Sensor Integration**: Documentation of how you added sensors to your robot model
+2. **Perception Implementation**: Explanation of your perception algorithms and how they process sensor data
+3. **System Integration**: Description of how sensor data influences robot behavior
+4. **Results**: Analysis of your robot's performance in detecting and responding to obstacles
+5. **Comparison**: Differences between simulated and real-world sensor behavior
+6. **Challenges**: Technical obstacles encountered and solutions implemented
 
 ## Troubleshooting
 
-- If semantic segmentation isn't working, ensure all objects have the ISegmentable interface
-- If bounding boxes aren't generated, verify that objects have colliders and are properly labeled
-- If capture rate is too high, increase the captureInterval parameter
-- If Unity crashes during capture, reduce the capture rate or scene complexity
+### Common Issues and Solutions
+
+1. **Sensor Topics Not Publishing**
+   - Problem: Camera or LiDAR topics don't appear in `ros2 topic list`
+   - Solution: Check URDF sensor plugin configuration; verify Gazebo simulation is running
+
+2. **Image Processing Errors**
+   - Problem: CvBridge conversion errors or incorrect image formats
+   - Solution: Verify image message format and adjust CvBridge conversion parameters
+
+3. **LiDAR Data Inconsistencies**
+   - Problem: Unexpected ranges or missing data points
+   - Solution: Check LiDAR plugin configuration and update rates
+
+4. **Robot Navigation Issues**
+   - Problem: Robot not responding to sensor-based navigation
+   - Solution: Verify topic remapping and message types match expectations
+
+## Performance Evaluation
+
+### Key Metrics
+- **Detection Accuracy**: Percentage of obstacles correctly detected
+- **Response Time**: Time from detection to robot response
+- **Navigation Success**: Success rate of obstacle avoidance behavior
+- **Computational Efficiency**: CPU utilization of perception algorithms
 
 ## Extension Activities
 
-1. Implement a dynamic scene where objects move during simulation
-2. Add weather effects (rain, fog, etc.) to generate more diverse data
-3. Train an object detection model using the generated synthetic data
-4. Compare model performance on synthetic vs. real-world data
+For advanced learners, consider:
 
-## Assessment Questions
+1. **SLAM Implementation**: Use sensor data for mapping and localization
+2. **Object Classification**: Implement deep learning models for object recognition
+3. **Multi-Sensor Fusion**: Combine data from multiple sensors for better perception
+4. **Real Robot Comparison**: Compare simulation results with real robot sensor data
 
-1. What are the advantages of synthetic data generation over real-world data collection for perception tasks?
-2. How do variations in lighting and environment affect the performance of perception systems?
-3. What limitations of Unity simulation for perception tasks did you identify?
+## Next Steps
 
-## Summary
-
-This lab introduced you to Unity's perception capabilities for generating realistic training data for computer vision applications. You've created a complete pipeline for synthetic data generation with accurate annotations that can be used to train perception models for robotics applications.
+In the next module, you'll learn about NVIDIA Isaac perception systems that build on these fundamental sensor integration concepts with AI-powered perception algorithms.

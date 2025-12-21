@@ -1,8 +1,3 @@
----
-title: ROS 2 Module Conclusion
-sidebar_position: 4
----
-
 # ROS 2 Module Conclusion
 
 Congratulations! You've completed the ROS 2 module of the Physical AI & Humanoid Robotics course. Let's review what you've learned and how it connects to the broader field of robotics.
@@ -19,29 +14,32 @@ In this 3-week module, you've gained:
 
 ## Applications in Physical AI
 
-ROS 2 serves as the foundational nervous system for many robotic platforms. It enables:
+ROS 2 serves as the backbone for many robotics applications:
 
-- **Component Integration**: Bringing together sensors, actuators, and AI algorithms
-- **Distributed Systems**: Managing communication across multiple computing units
-- **Simulation Integration**: Coordinating real and simulated environments
-- **Hardware Abstraction**: Writing code that works across different robotic platforms
+- **Inter-Process Communication**: Enables modular robot software architectures
+- **Hardware Abstraction**: Provides interfaces between high-level algorithms and robot hardware
+- **Visualization Tools**: Rviz and other tools for real-time monitoring and debugging
+- **Package Ecosystem**: Extensive libraries for navigation, manipulation, perception, and more
+- **Multi-Robot Systems**: Coordination of multiple robots in shared environments
 
 ## Looking Ahead
 
-The concepts you learned in this module form the foundation for the remaining modules:
+The concepts you learned in this module form the foundation for all future modules:
 
-- **Gazebo/Unity**: You'll connect ROS 2 nodes to simulation environments
-- **NVIDIA Isaac**: You'll integrate AI algorithms with ROS 2 communication
-- **Vision-Language-Action**: You'll build systems that combine perception, reasoning, and action
+- **Gazebo/Unity**: You'll connect ROS 2 nodes to simulated robots for safe testing
+- **NVIDIA Isaac**: You'll integrate AI algorithms with ROS 2 using Isaac ROS packages
+- **Vision-Language-Action**: You'll use ROS 2 to coordinate complex multi-modal AI systems
 
 ## Lab Exercises
 
-Complete the [ROS 2 Lab Exercises](./lab-exercises/lab1.md) to apply your knowledge to practical scenarios.
+Complete the [ROS 2 Lab Exercises](./lab-exercises/lab1.md) and [ROS 2 Communication Lab](./lab-exercises/lab2.md) to apply your knowledge to practical scenarios.
 
 ## Assessment
 
-Take the [ROS 2 Assessment](./assessments/quiz1.md) to test your understanding of ROS 2 fundamentals.
+Take the [ROS 2 Assessment](./assessments/quiz1.md) and [ROS 2 Architecture Assignment](./assessments/assignment1.md) to test your understanding of ROS 2 concepts.
 
----
+## Navigation
+
+[← Previous: Week 3: Advanced ROS 2 Concepts](./week3.md) | [Next: Course Introduction](../intro.md) | [Module Home](./intro.md)
 
 Continue to the [Course Introduction](../intro.md) to explore other modules as they become available.

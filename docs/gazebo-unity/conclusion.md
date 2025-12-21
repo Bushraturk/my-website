@@ -1,8 +1,3 @@
----
-title: Gazebo/Unity Module Conclusion
-sidebar_position: 8
----
-
 # Gazebo/Unity Module Conclusion
 
 Congratulations! You've completed the Gazebo/Unity simulation module of the Physical AI & Humanoid Robotics course. Let's review what you've learned and how it connects to the broader field of robotics.

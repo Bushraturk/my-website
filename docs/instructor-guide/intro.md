@@ -1,62 +1,133 @@
 ---
-title: Instructor Guide Introduction
-sidebar_position: 1
+title: Instructor Guide - Introduction
+sidebar_position: 21
 ---
 
-# Instructor Guide Introduction
+# Instructor Guide - Introduction
 
-Welcome to the instructor guide for the Physical AI & Humanoid Robotics textbook. This guide provides resources and recommendations for educators implementing this 13-week course using the AI-native textbook approach.
+Welcome to the instructor guide for the Physical AI & Humanoid Robotics course. This guide provides comprehensive resources to help you effectively teach the course, including weekly lesson plans, assessment rubrics, pedagogical notes, and troubleshooting guides.
 
 ## Course Overview
 
-This 13-week course covers the intersection of artificial intelligence and robotics, structured in 4 modules:
+This 13-week course introduces students to the integration of artificial intelligence with robotics, specifically focusing on embodied intelligence. The course is structured around four core modules:
 
-- **Module 1: ROS 2 (Weeks 1-3)** - Robotic operating system fundamentals
-- **Module 2: Gazebo/Unity (Weeks 4-6)** - Simulation environments and digital twins
-- **Module 3: NVIDIA Isaac (Weeks 7-9)** - AI-powered perception and control
-- **Module 4: Vision-Language-Action (Weeks 10-13)** - Embodied intelligence and multimodal systems
+1. **ROS 2 (Weeks 1-3)**: Robot Operating System as the nervous system of robotics
+2. **Gazebo/Unity (Weeks 4-6)**: Simulation environments as digital twins
+3. **NVIDIA Isaac (Weeks 7-9)**: AI-robot brains with perception and VSLAM
+4. **Vision-Language-Action (VLA) (Weeks 10-13)**: Integrating vision, language, and action planning
+
+## Learning Objectives Alignment
+
+Each module and week has specific learning objectives aligned with the overall course goals:
+
+- Students will understand the architecture and implementation of modern robotic systems
+- Students will connect AI models to physical robotic platforms
+- Students will develop embodied AI systems that can interpret natural language commands
+- Students will evaluate and validate robotic system performance
+
+## Required Resources
+
+### Hardware Requirements
+- NVIDIA RTX workstation with GPU for AI model training and inference
+- Intel RealSense cameras for perception
+- NVIDIA Jetson platforms for robot deployment
+- Robot platforms with 6+ DOF manipulators (UR3, Panda, or equivalent)
+- Additional sensors (LiDAR, force/torque sensors)
+
+### Software Requirements
+- Ubuntu 22.04 LTS
+- ROS 2 Humble Hawksbill
+- NVIDIA Isaac ROS packages
+- Gazebo Harmonic or Unity Robotics
+- Python 3.10+ with relevant AI libraries
+- Docker for containerized deployment
+
+## Assessment Strategy
+
+### Formative Assessment
+- Weekly lab exercises with peer review
+- In-class coding challenges
+- Concept checks during lectures
+- Discussion forums for troubleshooting
+
+### Summative Assessment
+- Weekly quizzes (multiple choice and short answer)
+- Programming assignments with rubric-based grading
+- Lab reports with technical analysis
+- Final capstone project with presentation
 
 ## Pedagogical Approach
 
-The course uses an AI-native approach with:
+The course employs a hands-on, project-based learning approach that emphasizes:
 
-- Interactive, hands-on lab exercises
-- Progressive skill building across modules
-- Integration of theory with practice
-- Emphasis on embodied AI and physical implementations
+1. **Embodied Cognition**: Learning through doing, with physical or simulated robots
+2. **Spiral Curriculum**: Revisiting concepts with increasing complexity
+3. **Collaborative Learning**: Group projects and peer programming
+4. **Real-World Application**: Connecting theoretical concepts to practical implementations
 
-## Hardware Requirements
+## Accessibility Considerations
 
-- **Minimum**: Computer with 8GB RAM, ROS 2 compatible platform
-- **Recommended**: NVIDIA RTX workstation for simulation, Jetson for deployment
-- **Robot Platforms**: ROS 2 compatible robots (TurtleBot3, Clearpath, etc.)
+### For Students with Disabilities
+- Provide alternative text for all images and diagrams
+- Offer multiple modalities for content consumption (text, video, interactive)
+- Ensure compatibility with assistive technologies
+- Provide extended time for practical assessments
 
-## Teaching Strategies
+### For Students with Different Technical Backgrounds
+- Offer pre-course preparation materials for students with limited programming experience
+- Provide additional resources for students with stronger backgrounds to explore advanced topics
+- Create peer-mentoring opportunities to support collaborative learning
 
-This guide provides:
+## Course Schedule Recommendations
 
-- Weekly lesson plans aligned with learning objectives
-- Lab exercise solutions and grading rubrics
-- Assessment answer keys and evaluation criteria
-- Troubleshooting guides for common issues
-- Pedagogical notes for difficult concepts
+The course can be taught in various formats:
 
-## Module-Specific Resources
+### 13-Week Semester Format
+- 2-3 hours of lectures per week
+- 3-4 hours of lab time per week
+- Weekly assignments due before the next week's lab
+- Midterm and final projects
 
-Detailed guides for each module help instructors:
+### Intensive Workshop Format
+- 6-8 hours per day for 13 days
+- Alternating lecture and hands-on sessions
+- Daily assignments and checkpoints
+- Final project due at the end of the workshop
 
-- Adapt content to their specific hardware setup
-- Adjust pacing based on student proficiency
-- Integrate with existing curriculum
-- Assess student learning effectively
+## Getting Started
 
-## Technology Integration
+This instructor guide contains detailed information for each week, including:
 
-The course leverages modern educational technology:
+- **Learning Objectives**: What students should know and be able to do
+- **Lesson Plans**: Detailed daily schedules with activities
+- **Assessment Rubrics**: Grading criteria for assignments and projects
+- **Troubleshooting Guides**: Common issues and solutions
+- **Extension Activities**: For students needing additional challenges
+- **Resource Lists**: Additional materials for deeper exploration
 
-- Docusaurus-based textbook with integrated code examples
-- AI-generated content with human validation
-- Interactive components for enhanced learning
-- Offline-accessible materials for diverse learning environments
+Use this guide in conjunction with the student-facing materials to ensure alignment between instruction and student expectations. Each week builds upon the previous, so maintaining the sequence is important for student success.
 
-Continue to [Offline Access Guide](./offline-access.md) for information on how students can access content with limited internet connectivity.
+## Technical Preparation
+
+Before beginning the course, ensure that all technical infrastructure is in place:
+
+1. **Robot Platforms**: Test all robot platforms with required software packages
+2. **Simulation Environment**: Verify that all students can access and run simulations
+3. **Software Installation**: Prepare installation scripts and images to streamline setup
+4. **Network Configuration**: Ensure stable network connections for collaborative tools and software repositories
+5. **Safety Protocols**: Review and implement all safety measures for robot operation
+
+## Support Resources
+
+For technical support and community discussion, join our instructor community:
+
+- **Documentation**: [Course Documentation Website]
+- **Support Forum**: [Link to Discussion Forum]
+- **Video Tutorials**: [Link to Tutorial Repository]
+- **Office Hours**: Regular office hours with course developers
+
+## Next Steps
+
+Continue to the [Hardware Setup Guide](./hardware.md) for detailed instructions on preparing your teaching environment and student lab stations.
+
+[Next: Hardware Setup for Instructors →](./hardware.md) | [Week 1 Lesson Plan →](../ros2/week1-2.md)

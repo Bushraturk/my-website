@@ -1,0 +1,54 @@
+{
+  "theme.ErrorPageContent.title": {
+    "message": "صفحہ خراب ہو گیا ہے",
+    "description": "The title of the error page"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "دوبارہ کوشش کریں",
+    "description": "The label of the button to try again"
+  },
+  "theme.NotFound.title": {
+    "message": "صفحہ نہیں ملا",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "آپ جو تلاش کر رہے تھے وہ ہمیں نہیں ملا۔",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "براہ کرم سائٹ کے مالک سے رابطہ کریں اور اس صفحہ کے بارے میں مطلع کریں کہ یہ غلط لنک ہے۔",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.admonition.note": {
+    "message": "نوٹ",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "ٹپ",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.danger": {
+    "message": "خطرہ",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "معلومات",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.caution": {
+    "message": "احتیاط",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Navigation",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "زبانیں",
+    "description": "The label of the language switcher dropdown in mobile view"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "ایک منٹ|{readingTime} منٹ",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  }
+}

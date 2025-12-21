@@ -1,0 +1,418 @@
+{
+  "homepage.hero.title": {
+    "message": "فزیکل AI اور ہیومنوائڈ روبوٹکس",
+    "description": "The main title on the homepage"
+  },
+  "homepage.hero.tagline": {
+    "message": "Embodied Intelligence کے لیے ایک جامع AI-native ٹیکسٹ بک",
+    "description": "The tagline on the homepage"
+  },
+  "homepage.hero.description": {
+    "message": "Embodied Intelligence اور روبوٹکس کے لیے ایک جامع AI-native ٹیکسٹ بک۔ ایسی ذہین مشینیں بنانا سیکھیں جو فزیکل دنیا میں محسوس کر سکیں، سوچ سکیں، اور عمل کر سکیں۔",
+    "description": "The description on the homepage"
+  },
+  "homepage.hero.startLearning": {
+    "message": "سیکھنا شروع کریں",
+    "description": "Start learning button text"
+  },
+  "homepage.hero.exploreModules": {
+    "message": "ماڈیولز دیکھیں",
+    "description": "Explore modules button text"
+  },
+  "homepage.courseInfo.title": {
+    "message": "اس کورس کے بارے میں",
+    "description": "Course info section title"
+  },
+  "homepage.courseInfo.description": {
+    "message": "یہ جامع 13 ہفتوں کی ٹیکسٹ بک مصنوعی ذہانت اور روبوٹکس کے جدید ترین تقاطع کا احاطہ کرتی ہے۔ آپ embodied AI سسٹمز بنانا سیکھیں گے جو فزیکل دنیا میں محسوس کر سکتے ہیں، سوچ سکتے ہیں، اور عمل کر سکتے ہیں - جدید ترین ٹیکنالوجیز بشمول ROS 2، NVIDIA Isaac، Gazebo/Unity simulation، اور Vision-Language-Action ماڈلز استعمال کرتے ہوئے۔",
+    "description": "Course info description"
+  },
+  "homepage.modules.title": {
+    "message": "کورس ماڈیولز",
+    "description": "Course modules section title"
+  },
+  "homepage.modules.ros2.title": {
+    "message": "ماڈیول 1: ROS 2 - روبوٹک اعصابی نظام",
+    "description": "ROS 2 module title"
+  },
+  "homepage.modules.ros2.weeks": {
+    "message": "ہفتہ 1-3",
+    "description": "ROS 2 module weeks"
+  },
+  "homepage.modules.ros2.description": {
+    "message": "Robot Operating System 2 کی بنیادیں سیکھیں، جدید روبوٹکس کا اعصابی نظام۔ Nodes، topics، services، اور actions کا احاطہ کرتا ہے۔",
+    "description": "ROS 2 module description"
+  },
+  "homepage.modules.gazebo.title": {
+    "message": "ماڈیول 2: Gazebo/Unity - ڈیجیٹل ٹوئن",
+    "description": "Gazebo module title"
+  },
+  "homepage.modules.gazebo.weeks": {
+    "message": "ہفتہ 4-6",
+    "description": "Gazebo module weeks"
+  },
+  "homepage.modules.gazebo.description": {
+    "message": "روبوٹکس ڈویلپمنٹ کے لیے simulation environments دریافت کریں۔ محفوظ testing اور validation کے لیے digital twins بنانا سیکھیں۔",
+    "description": "Gazebo module description"
+  },
+  "homepage.modules.isaac.title": {
+    "message": "ماڈیول 3: NVIDIA Isaac - AI روبوٹ دماغ",
+    "description": "Isaac module title"
+  },
+  "homepage.modules.isaac.weeks": {
+    "message": "ہفتہ 7-9",
+    "description": "Isaac module weeks"
+  },
+  "homepage.modules.isaac.description": {
+    "message": "روبوٹس کے لیے AI سے چلنے والی perception اور فیصلہ سازی دریافت کریں۔ Vision، perception، اور control کے لیے NVIDIA Isaac کو integrate کرنا سیکھیں۔",
+    "description": "Isaac module description"
+  },
+  "homepage.modules.vla.title": {
+    "message": "ماڈیول 4: VLA - ویژن-لینگویج-ایکشن",
+    "description": "VLA module title"
+  },
+  "homepage.modules.vla.weeks": {
+    "message": "ہفتہ 10-13",
+    "description": "VLA module weeks"
+  },
+  "homepage.modules.vla.description": {
+    "message": "Embodied intelligence کے لیے vision، language، اور action کے انضمام میں مہارت حاصل کریں۔ سیکھیں کہ روبوٹس قدرتی کمانڈز کو کیسے سمجھتے اور جواب دیتے ہیں۔",
+    "description": "VLA module description"
+  },
+  "homepage.features.title": {
+    "message": "کورس کی خصوصیات",
+    "description": "Course features section title"
+  },
+  "homepage.features.aiNative.title": {
+    "message": "AI-Native مواد",
+    "description": "AI native feature title"
+  },
+  "homepage.features.aiNative.description": {
+    "message": "AI ٹولز کے ساتھ تیار اور بہتر کیا گیا مواد، جدید ترین ٹیکنالوجیز کی تازہ ترین اور جامع کوریج کو یقینی بناتا ہے۔",
+    "description": "AI native feature description"
+  },
+  "homepage.features.labs.title": {
+    "message": "عملی لیبز",
+    "description": "Labs feature title"
+  },
+  "homepage.features.labs.description": {
+    "message": "عملی لیب مشقیں جو نظریاتی تصورات کو simulation اور فزیکل پلیٹ فارمز پر حقیقی implementations سے جوڑتی ہیں۔",
+    "description": "Labs feature description"
+  },
+  "homepage.features.industry.title": {
+    "message": "صنعتی ٹیکنالوجیز",
+    "description": "Industry feature title"
+  },
+  "homepage.features.industry.description": {
+    "message": "روبوٹکس ریسرچ اور انڈسٹری میں استعمال ہونے والے وہی ٹولز سیکھیں: ROS 2، NVIDIA Isaac، Gazebo، Unity، اور مزید۔",
+    "description": "Industry feature description"
+  },
+  "homepage.features.modular.title": {
+    "message": "ماڈیولر ڈیزائن",
+    "description": "Modular feature title"
+  },
+  "homepage.features.modular.description": {
+    "message": "ہفتوں اور ماڈیولز کے حساب سے منظم مواد، مختلف کورس شیڈولز کے مطابق ڈھالنا آسان بناتا ہے۔",
+    "description": "Modular feature description"
+  },
+  "homepage.quickAccess.title": {
+    "message": "فوری رسائی",
+    "description": "Quick access section title"
+  },
+  "homepage.quickAccess.labs.title": {
+    "message": "لیب مشقیں",
+    "description": "Lab exercises quick access title"
+  },
+  "homepage.quickAccess.labs.description": {
+    "message": "ہر ماڈیول کے لیے عملی مشقیں",
+    "description": "Lab exercises quick access description"
+  },
+  "homepage.quickAccess.assessments.title": {
+    "message": "جائزے",
+    "description": "Assessments quick access title"
+  },
+  "homepage.quickAccess.assessments.description": {
+    "message": "ہر ہفتے کے لیے کوئزز اور اسائنمنٹس",
+    "description": "Assessments quick access description"
+  },
+  "homepage.quickAccess.hardware.title": {
+    "message": "ہارڈویئر سیٹ اپ",
+    "description": "Hardware quick access title"
+  },
+  "homepage.quickAccess.hardware.description": {
+    "message": "مطلوبہ آلات کی تشکیل کے لیے گائیڈز",
+    "description": "Hardware quick access description"
+  },
+  "homepage.quickAccess.instructor.title": {
+    "message": "انسٹرکٹر گائیڈ",
+    "description": "Instructor quick access title"
+  },
+  "homepage.quickAccess.instructor.description": {
+    "message": "اس ٹیکسٹ بک کو استعمال کرنے والے اساتذہ کے لیے وسائل",
+    "description": "Instructor quick access description"
+  },
+  "signin.title": {
+    "message": "اپنے اکاؤنٹ میں سائن ان کریں",
+    "description": "Sign in page title"
+  },
+  "signin.formTitle": {
+    "message": "اپنے اکاؤنٹ میں سائن ان کریں",
+    "description": "Sign in form title"
+  },
+  "signin.email": {
+    "message": "ای میل",
+    "description": "Email label"
+  },
+  "signin.password": {
+    "message": "پاس ورڈ",
+    "description": "Password label"
+  },
+  "signin.signingIn": {
+    "message": "سائن ان ہو رہا ہے...",
+    "description": "Signing in button text"
+  },
+  "signin.signInBtn": {
+    "message": "سائن ان",
+    "description": "Sign in button text"
+  },
+  "signup.title": {
+    "message": "اپنا اکاؤنٹ بنائیں",
+    "description": "Sign up page title"
+  },
+  "signup.formTitle": {
+    "message": "اپنا اکاؤنٹ بنائیں",
+    "description": "Sign up form title"
+  },
+  "signup.subtitle": {
+    "message": "اپنا پس منظر شیئر کر کے اپنے سیکھنے کے تجربے کو ذاتی بنانے میں ہماری مدد کریں",
+    "description": "Sign up subtitle"
+  },
+  "signup.email": {
+    "message": "ای میل",
+    "description": "Email label"
+  },
+  "signup.password": {
+    "message": "پاس ورڈ",
+    "description": "Password label"
+  },
+  "signup.confirmPassword": {
+    "message": "پاس ورڈ کی تصدیق",
+    "description": "Confirm password label"
+  },
+  "signup.backgroundTitle": {
+    "message": "آپ کا پس منظر اور دلچسپیاں",
+    "description": "Background section title"
+  },
+  "signup.programmingExp": {
+    "message": "پروگرامنگ کا تجربہ",
+    "description": "Programming experience label"
+  },
+  "signup.hardwareExp": {
+    "message": "ہارڈویئر کا تجربہ",
+    "description": "Hardware experience label"
+  },
+  "signup.roboticsBackground": {
+    "message": "روبوٹکس کا پس منظر",
+    "description": "Robotics background label"
+  },
+  "signup.interests": {
+    "message": "دلچسپیاں",
+    "description": "Interests label"
+  },
+  "signup.level.none": {
+    "message": "کوئی نہیں",
+    "description": "None level"
+  },
+  "signup.level.beginner": {
+    "message": "ابتدائی",
+    "description": "Beginner level"
+  },
+  "signup.level.basic": {
+    "message": "بنیادی",
+    "description": "Basic level"
+  },
+  "signup.level.intermediate": {
+    "message": "درمیانی",
+    "description": "Intermediate level"
+  },
+  "signup.level.advanced": {
+    "message": "ایڈوانسڈ",
+    "description": "Advanced level"
+  },
+  "signup.robotics.none": {
+    "message": "کوئی نہیں",
+    "description": "No robotics background"
+  },
+  "signup.robotics.academic": {
+    "message": "تعلیمی",
+    "description": "Academic robotics background"
+  },
+  "signup.robotics.industry": {
+    "message": "صنعتی",
+    "description": "Industry robotics background"
+  },
+  "signup.creating": {
+    "message": "اکاؤنٹ بن رہا ہے...",
+    "description": "Creating account button text"
+  },
+  "signup.signUpBtn": {
+    "message": "سائن اپ",
+    "description": "Sign up button text"
+  },
+  "profile.title": {
+    "message": "صارف پروفائل",
+    "description": "User profile title"
+  },
+  "profile.loading": {
+    "message": "لوڈ ہو رہا ہے...",
+    "description": "Loading text"
+  },
+  "profile.pleaseSignIn": {
+    "message": "اپنا پروفائل دیکھنے کے لیے براہ کرم سائن ان کریں",
+    "description": "Please sign in message"
+  },
+  "profile.needLogin": {
+    "message": "اپنی پروفائل کی معلومات تک رسائی کے لیے آپ کو لاگ ان ہونا ضروری ہے۔",
+    "description": "Need login message"
+  },
+  "profile.welcome": {
+    "message": "خوش آمدید",
+    "description": "Welcome text"
+  },
+  "profile.yourInfo": {
+    "message": "آپ کی معلومات",
+    "description": "Your information title"
+  },
+  "profile.email": {
+    "message": "ای میل",
+    "description": "Email label"
+  },
+  "profile.programmingExp": {
+    "message": "پروگرامنگ کا تجربہ",
+    "description": "Programming experience label"
+  },
+  "profile.hardwareExp": {
+    "message": "ہارڈویئر کا تجربہ",
+    "description": "Hardware experience label"
+  },
+  "profile.roboticsBackground": {
+    "message": "روبوٹکس کا پس منظر",
+    "description": "Robotics background label"
+  },
+  "profile.interests": {
+    "message": "دلچسپیاں",
+    "description": "Interests label"
+  },
+  "profile.personalizedContent": {
+    "message": "ذاتی مواد",
+    "description": "Personalized content title"
+  },
+  "profile.personalizedDesc": {
+    "message": "آپ کے پس منظر کی بنیاد پر، ہم آپ کو ایسا مواد دکھا رہے ہیں جو آپ کے تجربے کی سطح اور دلچسپیوں سے میل کھاتا ہے۔",
+    "description": "Personalized content description"
+  },
+  "profile.continueLearning": {
+    "message": "سیکھنا جاری رکھیں",
+    "description": "Continue learning title"
+  },
+  "profile.goHome": {
+    "message": "ہوم پیج پر جائیں",
+    "description": "Go to homepage button"
+  },
+  "footer.courseModules.title": {
+    "message": "کورس ماڈیولز",
+    "description": "Footer course modules title"
+  },
+  "footer.courseModules.ros2": {
+    "message": "ROS 2",
+    "description": "Footer ROS 2 link"
+  },
+  "footer.courseModules.gazebo": {
+    "message": "Gazebo/Unity",
+    "description": "Footer Gazebo/Unity link"
+  },
+  "footer.courseModules.isaac": {
+    "message": "NVIDIA Isaac",
+    "description": "Footer NVIDIA Isaac link"
+  },
+  "footer.courseModules.vla": {
+    "message": "VLA",
+    "description": "Footer VLA link"
+  },
+  "footer.resources.title": {
+    "message": "وسائل",
+    "description": "Footer resources title"
+  },
+  "footer.resources.labs": {
+    "message": "لیب مشقیں",
+    "description": "Footer lab exercises link"
+  },
+  "footer.resources.assessments": {
+    "message": "جائزے",
+    "description": "Footer assessments link"
+  },
+  "footer.resources.instructor": {
+    "message": "انسٹرکٹر گائیڈ",
+    "description": "Footer instructor guide link"
+  },
+  "footer.community.title": {
+    "message": "کمیونٹی",
+    "description": "Footer community title"
+  },
+  "footer.copyright": {
+    "message": "کاپی رائٹ © {year} فزیکل AI اور ہیومنوائڈ روبوٹکس ٹیکسٹ بک۔ Docusaurus کے ساتھ بنایا گیا۔",
+    "description": "Footer copyright text"
+  },
+  "personalization.loading": {
+    "message": "ذاتی مواد لوڈ ہو رہا ہے...",
+    "description": "Loading personalized content"
+  },
+  "personalization.unlockTitle": {
+    "message": "ذاتی سیکھنے کا تجربہ حاصل کریں!",
+    "description": "Unlock personalized learning title"
+  },
+  "personalization.unlockDesc": {
+    "message": "اپنے تجربے کی سطح اور دلچسپیوں کی بنیاد پر ذاتی مشورے، بونس مواد، اور سفارشات حاصل کرنے کے لیے سائن اپ کریں۔",
+    "description": "Unlock personalized learning description"
+  },
+  "personalization.benefit1": {
+    "message": "آپ کی مہارت کی سطح کے مطابق بونس ٹپس",
+    "description": "Personalization benefit 1"
+  },
+  "personalization.benefit2": {
+    "message": "ذاتی سیکھنے کے راستے کی سفارشات",
+    "description": "Personalization benefit 2"
+  },
+  "personalization.benefit3": {
+    "message": "آپ کی دلچسپیوں کی بنیاد پر اضافی وسائل",
+    "description": "Personalization benefit 3"
+  },
+  "personalization.signupBtn": {
+    "message": "مفت سائن اپ کریں",
+    "description": "Sign up button"
+  },
+  "personalization.bonusPoints": {
+    "message": "بونس پوائنٹس",
+    "description": "Bonus points label"
+  },
+  "personalization.welcomeBack": {
+    "message": "خوش آمدید!",
+    "description": "Welcome back message"
+  },
+  "personalization.personalizedFor": {
+    "message": "آپ کے پروفائل کی بنیاد پر ذاتی مواد:",
+    "description": "Personalized content based on profile"
+  },
+  "personalization.bonusTips": {
+    "message": "آپ کے بونس ٹپس",
+    "description": "Your bonus tips"
+  },
+  "personalization.simulationTips": {
+    "message": "آپ کے لیے سمولیشن ٹپس:",
+    "description": "Simulation tips for you"
+  },
+  "personalization.aiTips": {
+    "message": "آپ کے سیکھنے کے سفر کے لیے AI ٹپس:",
+    "description": "AI tips for learning journey"
+  }
+}

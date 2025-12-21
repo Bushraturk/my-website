@@ -5,6 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
+    "start:ur": "docusaurus start --locale ur",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -19,21 +20,29 @@
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",
+    "@docusaurus/plugin-client-redirects": "^3.9.2",
     "@docusaurus/plugin-content-docs": "^3.9.2",
     "@docusaurus/preset-classic": "3.9.2",
     "@docusaurus/theme-classic": "^3.9.2",
     "@mdx-js/react": "^3.0.0",
+    "better-auth": "^1.4.5",
     "clsx": "^2.0.0",
+    "docusaurus-plugin-sass": "^0.2.6",
     "dotenv": "^17.2.3",
     "glob": "^13.0.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sass": "^1.95.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.9.2",
     "@docusaurus/tsconfig": "3.9.2",
     "@docusaurus/types": "3.9.2",
+    "mdx-mermaid": "^2.0.3",
+    "rehype-raw": "^7.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-disable-tokenizers": "^1.1.1",
     "typescript": "~5.6.2"
   },
   "browserslist": {

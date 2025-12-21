@@ -7,6 +7,10 @@ sidebar_position: 1
 
 Welcome to the comprehensive textbook on Physical AI & Humanoid Robotics! This textbook is designed to take you through the journey of understanding how artificial intelligence meets the physical world through robotics.
 
+## About This Course
+
+This comprehensive 13-week textbook covers the cutting-edge intersection of artificial intelligence and robotics. You'll learn to build embodied AI systems that can perceive, reason, and act in the physical world using state-of-the-art technologies including ROS 2, NVIDIA Isaac, Gazebo/Unity simulation, and Vision-Language-Action models.
+
 ## Course Overview
 
 This 13-week course is structured around four core modules:

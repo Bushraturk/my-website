@@ -3,7 +3,11 @@ title: Introduction to NVIDIA Isaac - AI-Robot Brains and Perception
 sidebar_position: 9
 ---
 
+import NvidiaIsaacPersonalization from '@site/src/components/NvidiaIsaacPersonalization';
+
 # Introduction to NVIDIA Isaac - AI-Robot Brains and Perception
+
+<NvidiaIsaacPersonalization />
 
 Welcome to Module 3 of the Physical AI & Humanoid Robotics course! In this module, you'll learn about the NVIDIA Isaac platform, which serves as the AI-brain of modern robotics, specializing in perception and intelligence for embodied systems.
 
