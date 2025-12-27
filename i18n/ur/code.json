@@ -19,6 +19,10 @@
     "message": "ماڈیولز دیکھیں",
     "description": "Explore modules button text"
   },
+  "homepage.hero.aiChat": {
+    "message": "🤖 AI چیٹ",
+    "description": "AI Chat button text"
+  },
   "homepage.courseInfo.title": {
     "message": "اس کورس کے بارے میں",
     "description": "Course info section title"
@@ -414,5 +418,37 @@
   "personalization.aiTips": {
     "message": "آپ کے سیکھنے کے سفر کے لیے AI ٹپس:",
     "description": "AI tips for learning journey"
+  },
+  "chatbot.title": {
+    "message": "AI معاون",
+    "description": "Chatbot window title"
+  },
+  "chatbot.placeholder": {
+    "message": "روبوٹکس کے بارے میں کچھ بھی پوچھیں...",
+    "description": "Chat input placeholder"
+  },
+  "chatbot.send": {
+    "message": "بھیجیں",
+    "description": "Send button"
+  },
+  "chatbot.empty": {
+    "message": "بات چیت شروع کریں! فزیکل AI اور روبوٹکس کے بارے میں کچھ بھی پوچھیں۔",
+    "description": "Empty state message"
+  },
+  "chatbot.empty.title": {
+    "message": "خوش آمدید!",
+    "description": "Empty state title"
+  },
+  "chatbot.error": {
+    "message": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔",
+    "description": "Error message"
+  },
+  "chatbot.retry": {
+    "message": "دوبارہ کوشش کریں",
+    "description": "Retry button"
+  },
+  "chatbot.clear": {
+    "message": "تاریخ صاف کریں",
+    "description": "Clear chat button"
   }
 }

@@ -1,0 +1,97 @@
+.chatButton {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.chatButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+}
+
+.chatButton:active {
+  transform: translateY(-1px);
+}
+
+.chatButton.active {
+  background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.chatButton.active:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.robotIcon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.chatButton.active .robotIcon {
+  color: #FFD700;
+  font-size: 24px;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  min-width: 22px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode */
+[data-theme='dark'] .chatButton {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+}
+
+[data-theme='dark'] .chatButton.active {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+[data-theme='dark'] .chatButton.active .robotIcon {
+  color: #000;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .chatButton {
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+  }
+
+  .robotIcon {
+    font-size: 24px;
+  }
+
+  .badge {
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+}

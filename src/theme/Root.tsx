@@ -1,10 +1,23 @@
 import React from 'react';
+import BrowserOnly from '@docusaurus/BrowserOnly';
+import { ChatProvider } from '../contexts/ChatContext';
+import { ChatButton, ChatWindow } from '../components/Chatbot';
 
-// Root component without auth providers to avoid recursive rendering during build
+// Root component with ChatProvider for global chatbot access
 const Root = ({ children }) => {
-  // Simply render children without any authentication wrappers during build
-  // Authentication is handled in BrowserOnly components/pages
-  return <>{children}</>;
+  return (
+    <ChatProvider>
+      {children}
+      <BrowserOnly fallback={null}>
+        {() => (
+          <>
+            <ChatButton />
+            <ChatWindow />
+          </>
+        )}
+      </BrowserOnly>
+    </ChatProvider>
+  );
 };
 
 export default Root;

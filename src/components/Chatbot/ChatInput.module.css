@@ -1,0 +1,126 @@
+.inputContainer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid #e5e5e5;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .inputContainer {
+  border-top-color: #333;
+  background: #0f0f0f;
+}
+
+.textarea {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  background: #fff;
+  color: #333;
+  min-height: 40px;
+  max-height: 120px;
+  line-height: 1.4;
+  transition: border-color 0.2s;
+}
+
+.textarea:focus {
+  border-color: #FFD700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+.textarea:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+[data-theme='dark'] .textarea {
+  background: #1a1a1a;
+  color: #eee;
+  border-color: #444;
+}
+
+[data-theme='dark'] .textarea:focus {
+  border-color: #FFD700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+}
+
+[data-theme='dark'] .textarea:disabled {
+  background: #111;
+}
+
+.textarea::placeholder {
+  color: #999;
+}
+
+[data-theme='dark'] .textarea::placeholder {
+  color: #666;
+}
+
+.sendButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sendButton:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.sendButton:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+[data-theme='dark'] .sendButton:disabled {
+  background: #444;
+}
+
+.sendIcon {
+  font-size: 18px;
+  color: #000;
+  transform: rotate(-45deg);
+  margin-left: 2px;
+}
+
+.loadingSpinner {
+  font-size: 18px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .inputContainer {
+    padding: 10px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
